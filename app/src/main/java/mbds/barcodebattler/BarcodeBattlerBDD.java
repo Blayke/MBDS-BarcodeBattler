@@ -34,7 +34,8 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
                 "niveau int not null," +
                 "vie int not null," +
                 "attaque int not null," +
-                "int int not null;";
+                "int int not null" +
+                "image BLOB);";
         db.execSQL(CREATE_MASCOTTE);
     }
 
@@ -43,68 +44,75 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
 
     }
 
-    public void addPersonne(Personne p) {
+    public void addMascotte(Mascotte mascotte) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("nom", p.nom);
-        values.put("prenom", p.prenom);
-        if(p.image != null){
+        values.put("nom", mascotte.getNom());
+        values.put("niveau", mascotte.getNiveau());
+        values.put("vie", mascotte.getVie());
+        values.put("attaque", mascotte.getAttaque());
+        values.put("defense", mascotte.getDefense());
+
+        if(mascotte.getImage() != null){
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            p.image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            mascotte.getImage().compress(Bitmap.CompressFormat.PNG, 100, bos);
             byte[] bArray = bos.toByteArray();
             values.put("image", bArray);
         }
 
-        db.insert("PERSONNE", null, values);
+        db.insert("MASCOTTE", null, values);
         db.close();
     }
 
-    public void UpdatePersonne(Personne p)
+    public void UpdateMacotte(Mascotte mascotte)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("nom", p.nom);
-        values.put("prenom", p.prenom);
+        values.put("nom", mascotte.getNom());
+        values.put("niveau", mascotte.getNiveau());
+        values.put("vie", mascotte.getVie());
+        values.put("attaque", mascotte.getAttaque());
+        values.put("defense", mascotte.getDefense());
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        p.image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        mascotte.getImage().compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bArray = bos.toByteArray();
         values.put("image", bArray);
-        db.update("PERSONNE", values, "id" + " = ?", new String[]{String.valueOf(p.id)});
+        db.update("MASCOTTE", values, "id" + " = ?", new String[]{String.valueOf(mascotte.getId())});
         db.close();
 
     }
 
-    protected ArrayList<Personne> getPersonnes() {
+    protected ArrayList<Mascotte> getMascottes() {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<Personne> pList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT id, nom, prenom, image FROM PERSONNE", null);
+        ArrayList<Mascotte> mList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT id, nom, niveau, vie, attaque, defense, image FROM MASCOTTE", null);
 
         if (cursor != null && cursor.moveToFirst())
         {
             do
             {
                 //traiter la ligne
-                Personne p = new Personne();
-                p.id = cursor.getInt(0);
-                p.nom = cursor.getString(1);
-                p.prenom = cursor.getString(2);
+                Mascotte m = new Mascotte();
+                m.setNom(cursor.getString(1));
+                m.setNiveau(cursor.getInt(2));
+                m.setVie(cursor.getInt(3));
+                m.setAttaque(cursor.getInt(4));
+                m.setDefense(cursor.getInt(5));
 
-//                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                p.image.compress(Bitmap.CompressFormat.PNG, 100, bos);
-//                byte[] bArray = bos.toByteArray();
-                if(cursor.getBlob(3) != null){
+
+                if(cursor.getBlob(6) != null){
                     Bitmap bitmap = BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length);
-                    p.image = bitmap;
+                    m.setImage(bitmap);
                 }
-                pList.add(p);
+                mList.add(m);
             } while (cursor.moveToNext());
 
         }
-        return pList;
+        return mList;
     }
     protected void deleteBDD(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String sqlDelete = "delete from Personne;";
+        String sqlDelete = "delete from MASCOTTE;";
         db.execSQL(sqlDelete);
     }
 }
