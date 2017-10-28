@@ -1,6 +1,5 @@
 package mbds.barcodebattler;
 
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
