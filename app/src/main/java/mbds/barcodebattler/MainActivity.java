@@ -26,5 +26,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
+        localBattle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CombatMascottesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

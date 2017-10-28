@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MonstersActivity"></activity>
+        <activity android:name=".CombatMascottesActivity"></activity>
     </application>
 
 </manifest>
