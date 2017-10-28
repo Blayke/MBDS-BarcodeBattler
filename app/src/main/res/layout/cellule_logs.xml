@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="16">
+
+    <ImageView
+        android:id="@+id/imageattaquant"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/alex"
+        />
+
+    <TextView
+        android:text="5"
+        android:textSize="25dp"
+        android:id="@+id/attaque"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        />
+
+    <RelativeLayout
+        android:layout_height="60dp"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_marginStart="3dp">
+    <ImageView
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:src="@drawable/swords"
+        android:layout_centerInParent="true"
+        />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageadversaire"
+        android:layout_height="60dp"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ame_des_aspects"
+        />
+
+    <TextView
+        android:text="10"
+        android:textSize="25dp"
+        android:id="@+id/pv"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        />
+
+    <RelativeLayout
+        android:layout_height="60dp"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_marginStart="3dp">
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:src="@drawable/heart"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

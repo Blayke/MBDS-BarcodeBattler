@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by Alex on 25/10/2017.
  */
 
-public class Mascotte {
+public class Mascotte implements Cloneable {
     private int id;
     private String nom;
     private int niveau;
@@ -88,5 +88,10 @@ public class Mascotte {
 
     public void setEquipements(ArrayList<Equipement> equipements) {
         this.equipements = equipements;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
