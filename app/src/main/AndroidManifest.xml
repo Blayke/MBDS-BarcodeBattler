@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".MonstersActivity" />
         <activity android:name=".CombatMascottesActivity" />
-        <activity android:name=".CodeBarreActivity" />
+        <activity android:name=".DetailsMascotte"/>
     </application>
 
 </manifest>

@@ -1,6 +1,9 @@
 package mbds.barcodebattler;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -8,7 +11,7 @@ import java.util.ArrayList;
  * Created by Alex on 25/10/2017.
  */
 
-public class Mascotte implements Cloneable {
+public class Mascotte implements Cloneable, Parcelable {
     private int id;
     private String nom;
     private int niveau;
@@ -27,8 +30,37 @@ public class Mascotte implements Cloneable {
         this.vie = vie;
         this.attaque = attaque;
         this.defense = defense;
-        equipements = new ArrayList<>();
+        this.equipements = new ArrayList<>();
     }
+    protected Mascotte(Parcel in) {
+        this.id = in.readInt();
+        this.nom = in.readString();
+        this.niveau = in.readInt();
+        this.vie = in.readInt();
+        this.attaque = in.readInt();
+        this.defense = in.readInt();
+        try {
+            this.image = in.readParcelable(Bitmap.class.getClassLoader());
+        }
+        catch(Exception e) {
+            Log.e("error", "parcelable image");
+        }
+
+        //TODO
+        this.equipements = new ArrayList<>();
+    }
+
+    public static final Creator<Mascotte> CREATOR = new Creator<Mascotte>() {
+        @Override
+        public Mascotte createFromParcel(Parcel in) {
+            return new Mascotte(in);
+        }
+
+        @Override
+        public Mascotte[] newArray(int size) {
+            return new Mascotte[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -93,5 +125,35 @@ public class Mascotte implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return "Mascotte{" +
+                "nom='" + nom + '\'' +
+                ", niveau=" + niveau +
+                ", vie=" + vie +
+                ", attaque=" + attaque +
+                ", defense=" + defense +
+                ", equipements=" + equipements +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.id);
+        parcel.writeString(this.nom);
+        parcel.writeInt(this.niveau);
+        parcel.writeInt(this.vie);
+        parcel.writeInt(this.attaque);
+        parcel.writeInt(this.defense);
+        if (this.image != null) parcel.writeParcelable(this.image, i);
+
+        //TODO equipements
     }
 }
