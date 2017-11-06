@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     protected void onPause() {
         super.onPause();
-        mScannerView.stopCamera();
+        if (mScannerView != null && mScannerView.isActivated()) mScannerView.stopCamera();
     }
 
     @Override
@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense);
         mascotteGagnee.setImage(image);
         Log.d("codeBarre", mascotteGagnee.toString());
+
+        BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
+        barCoderMaster.addMascotte(mascotteGagnee);
 
         Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
         intent.putExtra("mascotte", mascotteGagnee);

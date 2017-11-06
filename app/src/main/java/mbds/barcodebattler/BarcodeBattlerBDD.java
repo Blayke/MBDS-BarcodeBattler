@@ -21,9 +21,12 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "GESTION_ETUDIANT.db";
+    private Context context;
 
     public BarcodeBattlerBDD(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
+        this.remplirBase();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
                 "niveau int not null," +
                 "vie int not null," +
                 "attaque int not null," +
-                "int int not null" +
+                "defense int not null," +
                 "image BLOB);";
         db.execSQL(CREATE_MASCOTTE);
     }
@@ -101,7 +104,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
 
 
                 if(cursor.getBlob(6) != null){
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(cursor.getBlob(6), 0, cursor.getBlob(6).length);
                     m.setImage(bitmap);
                 }
                 mList.add(m);
@@ -114,5 +117,22 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlDelete = "delete from MASCOTTE;";
         db.execSQL(sqlDelete);
+    }
+
+    public void remplirBase() {
+        if (this.getMascottes().size() == 0) {
+
+            Mascotte m1 = new Mascotte("Albie", 15, 20, 50, 15);
+            Bitmap bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.albie);
+            m1.setImage(bm);
+
+            this.addMascotte(m1);
+
+            m1 = new Mascotte("Alex", 20, 65, 40 , 30);
+            bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.alex);
+            m1.setImage(bm);
+
+            this.addMascotte(m1);
+        }
     }
 }

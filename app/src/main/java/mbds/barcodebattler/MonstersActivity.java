@@ -19,21 +19,14 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
     BarcodeBattlerBDD barCoderMaster;
     ListView lv;
     ArrayList<Mascotte> listeMascotte;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mymonster);
-//        barCoderMaster = new BarcodeBattlerBDD(this);
-//        barCoderMaster.getMascottes();
-        listeMascotte = new ArrayList<>();
-        Mascotte m1 = new Mascotte("Albie", 15, 20, 50, 15);
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
-        m1.setImage(bm);
-        listeMascotte.add(m1);
-        m1 = new Mascotte("Alex", 20, 65, 40 , 30);
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.alex);
-        m1.setImage(bm);
-        listeMascotte.add(m1);
+        barCoderMaster = new BarcodeBattlerBDD(this);
+        listeMascotte = barCoderMaster.getMascottes();
+
         lv = (ListView) findViewById(R.id.listeMonstre);
         lv.setAdapter(this);
     }
