@@ -22,6 +22,8 @@ public class AcceptThread extends Thread {
     private final BluetoothServerSocket mmServerSocket;
     BluetoothAdapter mBluetoothAdapter;
     Handler mascotteHandler;
+    Mascotte mascotte;
+    Mascotte mascotteEnnemie;
     public AcceptThread(Handler h) {
         // Use a temporary object that is later assigned to mmServerSocket
         // because mmServerSocket is final.
@@ -66,18 +68,22 @@ public class AcceptThread extends Thread {
     {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
-            out.println("Vous êtes connecté");
+            out.println(mascotte.serialize());
             out.flush();
 
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            String message_distant = in.readLine();
+//            Log.d("BLUETOOTH", message_distant);
+//            Mascotte m = Mascotte.deserialize(message_distant);
+//            Message message = new Message();
+//            Bundle b = new Bundle();
+//            b.putParcelable("personne",message);
+//            message.setData(b);
+//            mascotteHandler.dispatchMessage(message);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message_distant = in.readLine();
             Log.d("BLUETOOTH", message_distant);
-            Mascotte m = Mascotte.deserialize(message_distant);
-            Message message = new Message();
-            Bundle b = new Bundle();
-            b.putParcelable("personne",message);
-            message.setData(b);
-            mascotteHandler.dispatchMessage(message);
+            mascotteEnnemie = Mascotte.deserialize(message_distant);
 
             socket.close();
         } catch (IOException e) {

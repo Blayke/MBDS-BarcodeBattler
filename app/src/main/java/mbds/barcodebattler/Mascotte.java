@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
 import java.io.FileReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 /**
@@ -181,28 +182,21 @@ public class Mascotte implements Cloneable, Parcelable {
         //TODO equipements
     }
 
-    public String serialize(Context context) {
+    public String serialize() {
 //        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //        this.image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 //        byte[] byteArray = byteArrayOutputStream.toByteArray();
 //        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 //        String ret = this.nom + "||" + this.attaque + "||" + encoded;
         Persister persister = new Persister();
-        File file = new File(context.getFilesDir(), "mascotte.xml");
-        StringBuilder mascotteText = new StringBuilder();
+
+        StringWriter mascotteText = new StringWriter();
         try {
-            persister.write(this, file);
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                mascotteText.append(line);
-                mascotteText.append('\n');
-            }
-            br.close();
+            persister.write(this, mascotteText);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mascotteText.toString();
+        return mascotteText.getBuffer().toString();
     }
 
     public static Mascotte deserialize(String encode) {
@@ -213,36 +207,33 @@ public class Mascotte implements Cloneable, Parcelable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        m.nom = serialezMascotte[0];
-//        m.attaque = serialezMascotte[1];
-//        byte[] decodedString = Base64.decode(serialezMascotte[2], Base64.DEFAULT);
-//        m.image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         return m;
     }
 
 //    public void testXml(Context context) {
 //        Persister persister = new Persister();
-//        File file = new File(context.getFilesDir(), "mascotte.xml");
-//        StringBuilder mascotteText = new StringBuilder();
+////        File file = new File(context.getFilesDir(), "mascotte.xml");
+//        StringWriter mascotteTxt = new StringWriter();
+////        StringBuilder mascotteText = new StringBuilder();
 //        try {
-//            persister.write(this, file);
-//            BufferedReader br = new BufferedReader(new FileReader(file));
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                mascotteText.append(line);
-//                mascotteText.append('\n');
-//            }
-//            br.close();
+//            persister.write(this, mascotteTxt);
+////            BufferedReader br = new BufferedReader(new FileReader(mascotteTxt));
+////            String line;
+////            while ((line = br.readLine()) != null) {
+////                mascotteText.append(line);
+////                mascotteText.append('\n');
+////            }
+////            br.close();
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//        Log.i("MascotteString", mascotteText.toString());
+//        Log.i("MascotteString", mascotteTxt.getBuffer().toString());
 //
 //        Mascotte m = new Mascotte();
 //        Serializer serializer = new Persister();
 //        try
 //        {
-//            m = serializer.read(Mascotte.class, mascotteText.toString());
+//            m = serializer.read(Mascotte.class, mascotteTxt.getBuffer().toString());
 //            Log.i("Mascotte deserialize",m.getNom());
 //        } catch (Exception e)
 //

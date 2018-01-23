@@ -20,6 +20,7 @@ public class ConnectThread extends Thread {
     private static final String TAG = "ClientBluetooth";
     BluetoothAdapter mBluetoothAdapter;
     Mascotte mascotte;
+    Mascotte mascotteEnnemie;
 
     public ConnectThread(BluetoothDevice device , Mascotte pMascotte) {
 
@@ -28,7 +29,6 @@ public class ConnectThread extends Thread {
         BluetoothSocket tmp = null;
         mmDevice = device;
         mascotte = pMascotte;
-
         try {
             // Get a BluetoothSocket to connect with the given BluetoothDevice.
             // MY_UUID is the app's UUID string, also used in the server code.
@@ -40,7 +40,7 @@ public class ConnectThread extends Thread {
         mmSocket = tmp;
     }
 
-    public void run(Context context) {
+    public void run() {
         // Cancel discovery because it otherwise slows down the connection.
         mBluetoothAdapter.cancelDiscovery();
 
@@ -60,17 +60,18 @@ public class ConnectThread extends Thread {
 
         // The connection attempt succeeded. Perform work associated with
         // the connection in a separate thread.
-        manageMyConnectedSocket(mmSocket, context);
+        manageMyConnectedSocket(mmSocket);
     }
 
-    private void manageMyConnectedSocket(BluetoothSocket mmSocket,Context context) {
+    private void manageMyConnectedSocket(BluetoothSocket mmSocket) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()));
             String message_distant = in.readLine();
             Log.d("BLUETOOTH", message_distant);
+            mascotteEnnemie = Mascotte.deserialize(message_distant);
 
             PrintWriter out = new PrintWriter(mmSocket.getOutputStream());
-            out.println(mascotte.serialize(context));
+            out.println(mascotte.serialize());
             out.flush();
 
         } catch (IOException e) {
