@@ -3,13 +3,15 @@ package mbds.barcodebattler;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.zxing.Result;
+
+import java.io.ByteArrayOutputStream;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -48,10 +50,12 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         localBattle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CombatMascottesActivity.class);
+                Intent intent = new Intent(MainActivity.this, CombatLocalSelect.class);
                 startActivity(intent);
             }
         });
+//        Mascotte testMascotteString = new Mascotte("Laeticia",67,1,500,0);
+//        testMascotteString.testXml(this);
     }
 
     @Override
@@ -105,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         int defense = Character.getNumericValue(hashCodeBarre.charAt(7));
 
         Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense);
-        mascotteGagnee.setImage(image);
+
+        //mascotteGagnee.setImage(image);
         Log.d("codeBarre", mascotteGagnee.toString());
 
         BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
@@ -113,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
         intent.putExtra("mascotte", mascotteGagnee);
+
+        Bitmap b = image;
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.PNG, 50, bs);
+        intent.putExtra("Image",bs.toByteArray());
         startActivity(intent);
 
         //}

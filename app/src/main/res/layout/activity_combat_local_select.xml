@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="mbds.barcodebattler.CombatMascottesActivity">
+
+    <TextView
+        android:text="Choisis tes monstres"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/nommascotte1"
+            android:text="Mascotte 1"
+            android:textAlignment="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/nommascotte2"
+            android:text="Mascotte 2"
+            android:textAlignment="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <ImageView
+            android:id="@+id/imagemascotte1"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_weight="2"
+            android:src="@drawable/pokemonombre"
+            />
+
+        <TextView
+            android:text="VS"
+            android:textAlignment="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="75dp"
+            android:layout_weight="1"
+            />
+
+        <ImageView
+            android:id="@+id/imagemascotte2"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:src="@drawable/pokemonombre"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/combat"
+            android:text="Combat"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textSize="17dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/retour"
+            android:layout_gravity="center"
+            android:text="Retour"
+            android:textAlignment="center"
+            android:textSize="17dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+
+</LinearLayout>

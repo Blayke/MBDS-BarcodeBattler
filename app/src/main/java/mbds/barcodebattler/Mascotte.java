@@ -1,29 +1,52 @@
 package mbds.barcodebattler;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Base64;
 import android.util.Log;
+import android.webkit.ConsoleMessage;
 
+import org.simpleframework.xml.Default;
+import org.simpleframework.xml.DefaultType;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 /**
  * Created by Alex on 25/10/2017.
  */
 
+@Root
 public class Mascotte implements Cloneable, Parcelable {
     private int id;
+    @Element
     private String nom;
+    @Element
     private int niveau;
+    @Element
     private int vie;
+    @Element
     private int attaque;
+    @Element
     private int defense;
     private Bitmap image;
     private ArrayList<Equipement> equipements;
 
-    public Mascotte(){
+    public Mascotte() {
 
     }
+
     public Mascotte(String nom, int niveau, int vie, int attaque, int defense) {
         this.nom = nom;
         this.niveau = niveau;
@@ -32,6 +55,7 @@ public class Mascotte implements Cloneable, Parcelable {
         this.defense = defense;
         this.equipements = new ArrayList<>();
     }
+
     protected Mascotte(Parcel in) {
         this.id = in.readInt();
         this.nom = in.readString();
@@ -39,15 +63,15 @@ public class Mascotte implements Cloneable, Parcelable {
         this.vie = in.readInt();
         this.attaque = in.readInt();
         this.defense = in.readInt();
-        try {
+        /*try {
             this.image = in.readParcelable(Bitmap.class.getClassLoader());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.e("error", "parcelable image");
-        }
+        }*/
+        this.image = null;
 
         //TODO
-        this.equipements = new ArrayList<>();
+//        this.equipements = new ArrayList<>();
     }
 
     public static final Creator<Mascotte> CREATOR = new Creator<Mascotte>() {
@@ -156,4 +180,74 @@ public class Mascotte implements Cloneable, Parcelable {
 
         //TODO equipements
     }
+
+    public String serialize(Context context) {
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        this.image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+//        byte[] byteArray = byteArrayOutputStream.toByteArray();
+//        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+//        String ret = this.nom + "||" + this.attaque + "||" + encoded;
+        Persister persister = new Persister();
+        File file = new File(context.getFilesDir(), "mascotte.xml");
+        StringBuilder mascotteText = new StringBuilder();
+        try {
+            persister.write(this, file);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                mascotteText.append(line);
+                mascotteText.append('\n');
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mascotteText.toString();
+    }
+
+    public static Mascotte deserialize(String encode) {
+        Mascotte m = new Mascotte();
+        Serializer serializer = new Persister();
+        try {
+            m = serializer.read(Mascotte.class, encode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        m.nom = serialezMascotte[0];
+//        m.attaque = serialezMascotte[1];
+//        byte[] decodedString = Base64.decode(serialezMascotte[2], Base64.DEFAULT);
+//        m.image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return m;
+    }
+
+//    public void testXml(Context context) {
+//        Persister persister = new Persister();
+//        File file = new File(context.getFilesDir(), "mascotte.xml");
+//        StringBuilder mascotteText = new StringBuilder();
+//        try {
+//            persister.write(this, file);
+//            BufferedReader br = new BufferedReader(new FileReader(file));
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                mascotteText.append(line);
+//                mascotteText.append('\n');
+//            }
+//            br.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        Log.i("MascotteString", mascotteText.toString());
+//
+//        Mascotte m = new Mascotte();
+//        Serializer serializer = new Persister();
+//        try
+//        {
+//            m = serializer.read(Mascotte.class, mascotteText.toString());
+//            Log.i("Mascotte deserialize",m.getNom());
+//        } catch (Exception e)
+//
+//        {
+//            e.printStackTrace();
+//        }
+//    }
 }

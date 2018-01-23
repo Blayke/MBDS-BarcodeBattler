@@ -37,22 +37,26 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combat_mascottes);
-
         logsCombat = new ArrayList<>();
 
-        mascotte1 = new Mascotte("Mascotte1", 10, 20, 5, 3);
-        //getIntent().getExtras().getParcelable("mascotte_1");
-        mascotte2 = new Mascotte("Mascotte2", 10, 20, 5, 3);
-        //getIntent().getExtras().getParcelable("mascotte_2");
+        mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
+        Bitmap b = BitmapFactory.decodeByteArray(
+                getIntent().getByteArrayExtra("Image1"), 0, getIntent().getByteArrayExtra("Image1").length);
+        mascotte1.setImage(b);
+
+        mascotte2 = getIntent().getExtras().getParcelable("mascotte2");
+        b = BitmapFactory.decodeByteArray(
+                getIntent().getByteArrayExtra("Image2"), 0, getIntent().getByteArrayExtra("Image2").length);
+        mascotte2.setImage(b);
 
         imageMascotte1 = (ImageView) findViewById(R.id.imagemascotte1);
-        Bitmap i1 = BitmapFactory.decodeResource(getResources(), R.drawable.ame_des_aspects);
-        mascotte1.setImage(i1);
+//        Bitmap i1 = BitmapFactory.decodeResource(getResources(), R.drawable.ame_des_aspects);
+//        mascotte1.setImage(i1);
         imageMascotte1.setImageBitmap(mascotte1.getImage());
 
         imageMascotte2 = (ImageView) findViewById(R.id.imagemascotte2);
-        Bitmap i2 = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
-        mascotte2.setImage(i2);
+//        Bitmap i2 = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
+//        mascotte2.setImage(i2);
         imageMascotte2.setImageBitmap(mascotte2.getImage());
 
         Mascotte vainqueur = lancerCombat();
