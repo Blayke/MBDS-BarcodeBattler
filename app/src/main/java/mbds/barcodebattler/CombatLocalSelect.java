@@ -31,11 +31,11 @@ public class CombatLocalSelect extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combat_local_select);
-        this.hideButton(true);
         imageMascotte1 = (ImageView) findViewById(R.id.imagemascotte1);
         imageMascotte2 = (ImageView) findViewById(R.id.imagemascotte2);
         btnCombat = (Button) findViewById(R.id.combat);
         btnRetour = (Button) findViewById(R.id.retour);
+        this.hideButton(true);
 
         imageMascotte1.setOnClickListener(new View.OnClickListener() {
             @Override

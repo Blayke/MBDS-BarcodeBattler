@@ -25,7 +25,8 @@
         <activity android:name=".CombatMascottesActivity" />
         <activity android:name=".DetailsMascotte" />
         <activity android:name=".CombatLocalSelect" />
-        <activity android:name=".ListMascotte"></activity>
+        <activity android:name=".ListMascotte" />
+        <activity android:name=".CombatReseauSelect"></activity>
     </application>
 
 </manifest>
