@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,5 +45,14 @@ public class DetailsMascotte extends AppCompatActivity {
 
         imageViewImageMascotte = (ImageView) findViewById(R.id.image);
         imageViewImageMascotte.setImageBitmap(mascotte.getImage());
+
+        Button btnRetour = (Button) findViewById(R.id.retour);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 }

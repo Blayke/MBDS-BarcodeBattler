@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,6 +30,14 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
 
         lv = (ListView) findViewById(R.id.listeMonstre);
         lv.setAdapter(this);
+
+        Button btnRetour = (Button) findViewById(R.id.retour);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -95,15 +104,15 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
 
         TextView vie = (TextView) returnView.findViewById(R.id.vie);
 //        vie.setText(barCoderMaster.getMascottes().get(i).getVie());
-        niveau.setText(listeMascotte.get(i).getVie()+"");
+        vie.setText(listeMascotte.get(i).getVie()+"");
 
         TextView attaque = (TextView) returnView.findViewById(R.id.attaque);
 //        attaque.setText(barCoderMaster.getMascottes().get(i).getAttaque());
-        niveau.setText(listeMascotte.get(i).getAttaque()+"");
+        attaque.setText(listeMascotte.get(i).getAttaque()+"");
 
         TextView defense = (TextView) returnView.findViewById(R.id.defense);
 //        defense.setText(barCoderMaster.getMascottes().get(i).getDefense());
-        niveau.setText(listeMascotte.get(i).getDefense()+"");
+        defense.setText(listeMascotte.get(i).getDefense()+"");
 
         ImageView image = (ImageView) returnView.findViewById(R.id.IV);
 

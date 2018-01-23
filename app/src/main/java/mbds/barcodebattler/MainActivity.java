@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MonstersActivity.class);
-                startActivityForResult(intent, 1);
+                //startActivityForResult(intent, 1);
+                startActivity(intent);
             }
         });
 
@@ -110,11 +111,12 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense);
 
-        //mascotteGagnee.setImage(image);
         Log.d("codeBarre", mascotteGagnee.toString());
 
         BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
+        mascotteGagnee.setImage(image);
         barCoderMaster.addMascotte(mascotteGagnee);
+        mascotteGagnee.setImage(null); // On passe l'image en compresser
 
         Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
         intent.putExtra("mascotte", mascotteGagnee);
