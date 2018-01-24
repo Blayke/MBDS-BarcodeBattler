@@ -26,7 +26,7 @@ public class CombatReseauSelect extends AppCompatActivity {
 
     ImageView imageMascotte;
     Mascotte mascotte;
-    Button btnCombat;
+    Button btnAccepteCombat;
     Button btnRetour;
     Button btnChercher;
     BluetoothAdapter mBluetoothAdapter;
@@ -41,6 +41,7 @@ public class CombatReseauSelect extends AppCompatActivity {
 //                String deviceName = device.getName();
 //                String deviceHardwareAddress = device.getAddress(); // MAC address
                 listDevice.add(device);
+                Log.d("BLUETOOTH", "Ajout d'un device : " + listDevice);
             }
         }
     };
@@ -55,8 +56,9 @@ public class CombatReseauSelect extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combat_reseau_select);
+        listDevice = new ArrayList<>();
         imageMascotte = (ImageView) findViewById(R.id.imagemascotte);
-        btnCombat = (Button) findViewById(R.id.combat);
+        btnAccepteCombat = (Button) findViewById(R.id.accepteCombat);
         btnRetour = (Button) findViewById(R.id.retour);
         btnChercher = (Button) findViewById(R.id.chercher);
         this.hideButton(true);
@@ -64,12 +66,6 @@ public class CombatReseauSelect extends AppCompatActivity {
         //INSCRIPTION
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, filter);
-
-        //Discoverable
-        Intent discoverableIntent =
-                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivityForResult(discoverableIntent, 3);
 
         imageMascotte.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +84,6 @@ public class CombatReseauSelect extends AppCompatActivity {
         btnChercher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                runBt();
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
                     // si l’adapter est null, le téléphone ne supporte pas le bluetooth
@@ -102,6 +97,18 @@ public class CombatReseauSelect extends AppCompatActivity {
                 }
             }
         });
+
+        btnAccepteCombat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Discoverable
+                Intent discoverableIntent =
+                        new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 500);
+                startActivityForResult(discoverableIntent, 3);
+            }
+        });
+
     }
 
     @Override
@@ -119,26 +126,26 @@ public class CombatReseauSelect extends AppCompatActivity {
                     this.hideButton(false);
                 }
             }
-            if ((requestCode == 2)) {
-                if (resultCode == RESULT_OK) {
-                    runBt();
-                }
+        }
+
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                runBt();
             }
-            if ((requestCode == 3)) {
-                if (resultCode == RESULT_CANCELED) {
-                    Log.d("BLUETOOTH", "discoverable done");
-                }
+        }
+        if (requestCode == 3) {
+            if (resultCode == RESULT_CANCELED) {
+                Log.d("BLUETOOTH", "discoverable done");
             }
         }
     }
 
     private void hideButton(boolean bool) {
-        btnCombat = (Button) findViewById(R.id.combat);
         if (bool) {
-            btnCombat.setVisibility(View.GONE);
+            btnAccepteCombat.setVisibility(View.GONE);
             btnChercher.setVisibility(View.GONE);
         } else {
-            btnCombat.setVisibility(View.VISIBLE);
+            btnAccepteCombat.setVisibility(View.VISIBLE);
             btnChercher.setVisibility(View.VISIBLE);
         }
     }
@@ -155,6 +162,7 @@ public class CombatReseauSelect extends AppCompatActivity {
             {
                 BluetoothDevice device = (BluetoothDevice) pairedDevices.toArray()[i];
                 listDevice.add(device);
+                Log.d("BLUETOOTH", "Ajout d'un device : " + listDevice);
                 String deviceName = device.getName();
                 cs[i] = deviceName;
             }

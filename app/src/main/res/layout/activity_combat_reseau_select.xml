@@ -53,8 +53,8 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/combat"
-            android:text="Accepte le combat"
+            android:id="@+id/accepteCombat"
+            android:text="Accepter les combats"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textSize="17dp"
@@ -64,7 +64,7 @@
 
         <Button
             android:id="@+id/chercher"
-            android:text="Cherche un combat"
+            android:text="Défier une personne"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textSize="17dp"
