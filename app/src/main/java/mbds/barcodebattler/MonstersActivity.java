@@ -1,10 +1,14 @@
 package mbds.barcodebattler;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,7 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class MonstersActivity extends AppCompatActivity implements ListAdapter {
@@ -87,46 +93,68 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View returnView;
         if (view == null) {
-//            on va glonfer le xml
-            returnView = View.inflate(this, R.layout.liste_monstre, null);
+            returnView = View.inflate(this, R.layout.liste_monstre_etendue, null);
         } else {
             returnView = view;
         }
-        returnView.setId(i);
+        //returnView.setId(i);
 
-        TextView niveau = (TextView) returnView.findViewById(R.id.niveau);
-//        niveau.setText(barCoderMaster.getMascottes().get(i).getNiveau());
-        niveau.setText(listeMascotte.get(i).getNiveau()+"");
+        TextView niveau = returnView.findViewById(R.id.niveau);
+        niveau.setText(String.format("%s", listeMascotte.get(i).getNiveau()));
 
-        TextView nom = (TextView) returnView.findViewById(R.id.nom);
-//        nom.setText(barCoderMaster.getMascottes().get(i).getNom());
-        nom.setText(listeMascotte.get(i).getNom()+"");
+        TextView nom = returnView.findViewById(R.id.nom);
+        nom.setText(String.format("%s", listeMascotte.get(i).getNom()));
 
-        TextView vie = (TextView) returnView.findViewById(R.id.vie);
-//        vie.setText(barCoderMaster.getMascottes().get(i).getVie());
-        vie.setText(listeMascotte.get(i).getVie()+"");
+        TextView vie = returnView.findViewById(R.id.vie);
+        vie.setText(String.format("%s", listeMascotte.get(i).getVie()));
 
-        TextView attaque = (TextView) returnView.findViewById(R.id.attaque);
-//        attaque.setText(barCoderMaster.getMascottes().get(i).getAttaque());
-        attaque.setText(listeMascotte.get(i).getAttaque()+"");
+        TextView attaque = returnView.findViewById(R.id.attaque);
+        attaque.setText(String.format("%s", listeMascotte.get(i).getAttaque()));
 
-        TextView defense = (TextView) returnView.findViewById(R.id.defense);
-//        defense.setText(barCoderMaster.getMascottes().get(i).getDefense());
-        defense.setText(listeMascotte.get(i).getDefense()+"");
+        TextView defense = returnView.findViewById(R.id.defense);
+        defense.setText(String.format("%s", listeMascotte.get(i).getDefense()));
 
-        ImageView image = (ImageView) returnView.findViewById(R.id.IV);
-
+        ImageView image = returnView.findViewById(R.id.IV);
         if (listeMascotte.get(i).getImage() != null) {
             image.setImageBitmap(listeMascotte.get(i).getImage());
         } else {
             image.setImageBitmap(null);
         }
 
-//        if (barCoderMaster.getMascottes().get(i).getImage() != null) {
-//            image.setImageBitmap(barCoderMaster.getMascottes().get(i).getImage());
-//        } else {
-//            image.setImageBitmap(null);
-//        }
+        Button btnDelete = returnView.findViewById(R.id.delete);
+        if (btnDelete != null) {
+            btnDelete.setId(i);
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+
+                    final int ID = v.getId();
+
+                    new AlertDialog.Builder(v.getContext())
+                        .setTitle("Supprimer " + listeMascotte.get(v.getId()).getNom())
+                        .setMessage("Voulez-vous vraiment supprimer ce monstre ?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                Log.d("DELETE", "id : " + ID);
+                                Mascotte mascotte = listeMascotte.get(ID);
+                                Log.d("DELETE", mascotte.toString());
+                                Log.d("DELETE", "Nb mascottes avant : " + listeMascotte.size());
+                                barCoderMaster.deleteMascotte(mascotte);
+                                Log.d("DELETE", "Après delete");
+                                listeMascotte = barCoderMaster.getMascottes();
+                                Log.d("DELETE", "Nb mascottes après : " + listeMascotte.size());
+                                lv.invalidateViews();
+
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
+                }
+            });
+        }
+
         return returnView;
     }
 
@@ -142,7 +170,6 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
 
     @Override
     public boolean isEmpty() {
-//        return barCoderMaster.getMascottes().size() == 0;
         return listeMascotte.size() == 0;
     }
 }

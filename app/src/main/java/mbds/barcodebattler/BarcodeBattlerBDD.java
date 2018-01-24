@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -67,6 +68,14 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteMascotte(Mascotte mascotte) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String where = "ID=" + mascotte.getId();
+        Log.d("DELETE", "Vrai id de la mascotte : " + mascotte.getId());
+        db.delete("MASCOTTE", where, null);
+        db.close();
+    }
+
     public void UpdateMacotte(Mascotte mascotte)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -96,6 +105,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
             {
                 //traiter la ligne
                 Mascotte m = new Mascotte();
+                m.setId(cursor.getInt(0));
                 m.setNom(cursor.getString(1));
                 m.setNiveau(cursor.getInt(2));
                 m.setVie(cursor.getInt(3));
@@ -130,6 +140,12 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
 
             m1 = new Mascotte("Alex", 20, 65, 40 , 30);
             bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.alex);
+            m1.setImage(bm);
+
+            this.addMascotte(m1);
+
+            m1 = new Mascotte("Âme des aspects", 40, 100, 30 , 20);
+            bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.ame_des_aspects);
             m1.setImage(bm);
 
             this.addMascotte(m1);

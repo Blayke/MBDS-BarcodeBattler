@@ -210,6 +210,10 @@ public class Mascotte implements Cloneable, Parcelable {
         return m;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
 //    public void testXml(Context context) {
 //        Persister persister = new Persister();
 ////        File file = new File(context.getFilesDir(), "mascotte.xml");
