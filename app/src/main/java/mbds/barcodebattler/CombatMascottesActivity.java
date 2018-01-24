@@ -3,6 +3,7 @@ package mbds.barcodebattler;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 public class CombatMascottesActivity extends AppCompatActivity implements ListAdapter {
@@ -27,6 +30,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
     TextView nomMascotte1;
     TextView nomMascotte2;
     TextView resume;
+    HashMap attributionCouleurs;
 
     int nbTours = 0;
     ArrayList<LogCombat> logsCombat;
@@ -38,6 +42,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_combat_mascottes);
         logsCombat = new ArrayList<>();
+        attributionCouleurs = new HashMap();
 
         mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
         Bitmap b = BitmapFactory.decodeByteArray(
@@ -48,16 +53,26 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         b = BitmapFactory.decodeByteArray(
                 getIntent().getByteArrayExtra("Image2"), 0, getIntent().getByteArrayExtra("Image2").length);
         mascotte2.setImage(b);
+        // Si les deux mascottes sont du même type, on les différencie
+        if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
+            mascotte1.setNom(mascotte1.getNom() + " (1)");
+            mascotte2.setNom(mascotte2.getNom() + " (2)");
+        }
+
+        attributionCouleurs.put(mascotte1.getNom(), Color.LTGRAY);
+        attributionCouleurs.put(mascotte2.getNom(), Color.GRAY);
 
         imageMascotte1 = (ImageView) findViewById(R.id.imagemascotte1);
-//        Bitmap i1 = BitmapFactory.decodeResource(getResources(), R.drawable.ame_des_aspects);
-//        mascotte1.setImage(i1);
+        //Bitmap i1 = BitmapFactory.decodeResource(getResources(), R.drawable.ame_des_aspects);
+        //mascotte1.setImage(i1);
         imageMascotte1.setImageBitmap(mascotte1.getImage());
+        imageMascotte1.setBackgroundColor(Color.LTGRAY);
 
         imageMascotte2 = (ImageView) findViewById(R.id.imagemascotte2);
-//        Bitmap i2 = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
-//        mascotte2.setImage(i2);
+        //Bitmap i2 = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
+        //mascotte2.setImage(i2);
         imageMascotte2.setImageBitmap(mascotte2.getImage());
+        imageMascotte2.setBackgroundColor(Color.GRAY);
 
         Mascotte vainqueur = lancerCombat();
 
@@ -197,6 +212,8 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
             returnView = View.inflate(this, R.layout.cellule_logs, null);
         else
             returnView = view;
+
+        returnView.setBackgroundColor((Integer) attributionCouleurs.get(logsCombat.get(i).getAttaquant().getNom()));
 
         ImageView imageViewAttaquant = (ImageView) returnView.findViewById(R.id.imageattaquant);
         Bitmap image = logsCombat.get(i).getAttaquant().getImage();

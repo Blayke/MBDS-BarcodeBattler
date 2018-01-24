@@ -104,15 +104,15 @@ public class ListMascotte extends AppCompatActivity implements ListAdapter {
 
         TextView vie = (TextView) returnView.findViewById(R.id.vie);
 //        vie.setText(barCoderMaster.getMascottes().get(i).getVie());
-        niveau.setText(listeMascotte.get(i).getVie() + "");
+        vie.setText(listeMascotte.get(i).getVie() + "");
 
         TextView attaque = (TextView) returnView.findViewById(R.id.attaque);
 //        attaque.setText(barCoderMaster.getMascottes().get(i).getAttaque());
-        niveau.setText(listeMascotte.get(i).getAttaque() + "");
+        attaque.setText(listeMascotte.get(i).getAttaque() + "");
 
         TextView defense = (TextView) returnView.findViewById(R.id.defense);
 //        defense.setText(barCoderMaster.getMascottes().get(i).getDefense());
-        niveau.setText(listeMascotte.get(i).getDefense() + "");
+        defense.setText(listeMascotte.get(i).getDefense() + "");
 
         final ImageView image = (ImageView) returnView.findViewById(R.id.IV);
 
