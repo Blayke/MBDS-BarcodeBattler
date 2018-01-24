@@ -203,14 +203,14 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 0, stream);
         Bitmap b = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
-        imageViewAttaquant.setImageBitmap(Bitmap.createScaledBitmap(b, 200, 200, false));
+        imageViewAttaquant.setImageBitmap(Bitmap.createScaledBitmap(b, 80, 80, false));
 
         ImageView imageViewAdversaire = (ImageView) returnView.findViewById(R.id.imageadversaire);
         image = logsCombat.get(i).getAdversaireApresAttaque().getImage();
         stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 0, stream);
         b = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
-        imageViewAdversaire.setImageBitmap(Bitmap.createScaledBitmap(b, 200, 200, false));
+        imageViewAdversaire.setImageBitmap(Bitmap.createScaledBitmap(b, 80, 80, false));
 
         TextView textViewAttaque = (TextView) returnView.findViewById(R.id.attaque);
         textViewAttaque.setText(logsCombat.get(i).attaque + "");
