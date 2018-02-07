@@ -99,5 +99,13 @@ public class AcceptThread extends Thread {
             Log.e(TAG, "Could not close the connect socket", e);
         }
     }
+
+    public void setMascotte(Mascotte mascotte){
+        this.mascotte = mascotte;
+    }
+
+    public Mascotte getMascotteEnnemie(){
+        return mascotteEnnemie;
+    }
 }
 

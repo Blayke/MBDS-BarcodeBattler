@@ -72,7 +72,7 @@ public class Mascotte implements Cloneable, Parcelable {
         this.image = null;
 
         //TODO
-//        this.equipements = new ArrayList<>();
+        this.equipements = new ArrayList<>();
     }
 
     public static final Creator<Mascotte> CREATOR = new Creator<Mascotte>() {
@@ -196,7 +196,9 @@ public class Mascotte implements Cloneable, Parcelable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mascotteText.getBuffer().toString();
+        String mascotteFormat = mascotteText.getBuffer().toString();
+        mascotteFormat = mascotteFormat.replace("\n", "").replace("\r", "");
+        return mascotteFormat;
     }
 
     public static Mascotte deserialize(String encode) {

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -31,7 +34,10 @@ public class CombatReseauSelect extends AppCompatActivity {
     Button btnChercher;
     BluetoothAdapter mBluetoothAdapter;
     ArrayList<BluetoothDevice> listDevice;
+    AcceptThread thread1;
     ConnectThread thread2;
+    public Handler mHandler;
+    Thread thread;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -77,6 +83,7 @@ public class CombatReseauSelect extends AppCompatActivity {
         btnRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopThreads();
                 finish();
             }
         });
@@ -109,6 +116,58 @@ public class CombatReseauSelect extends AppCompatActivity {
             }
         });
 
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        if((thread1 != null && thread1.getMascotteEnnemie() != null) || (thread2 != null && thread2.getMascotteEnnemie() != null) ){
+                            Mascotte mascotteEnnemi = new Mascotte();
+
+                            if (thread1 != null && thread1.getMascotteEnnemie() != null)
+                                mascotteEnnemi = thread1.getMascotteEnnemie();
+                            if (thread2 != null && thread2.getMascotteEnnemie() != null)
+                                mascotteEnnemi = thread2.getMascotteEnnemie();
+
+                            Log.d("MascotteTEST", "J'ai trouvé un ennemi nommé : " + mascotteEnnemi.getNom());
+                            Log.d("MascotteTEST", "J'ai ma mascotte : " + mascotte.getNom());
+
+                            Intent intent = new Intent(CombatReseauSelect.this, CombatMascottesActivity.class);
+
+                            Bitmap b = mascotte.getImage();
+                            Log.d("MascotteTest", "J'ai une image ! " + mascotte.getImage());
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
+                            Log.d("MascotteTest", "L'image compressé est : " + bs.toByteArray());
+                            mascotte.setImage(null);
+                            intent.putExtra("mascotte1", mascotte);
+                            intent.putExtra("Image1", bs.toByteArray());
+
+                            mascotteEnnemi.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.pokemonombre));
+                            b = mascotteEnnemi.getImage();
+
+                            bs = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
+
+                            mascotteEnnemi.setImage(null);
+                            intent.putExtra("mascotte2", mascotteEnnemi);
+                            intent.putExtra("Image2", bs.toByteArray());
+                            this.interrupt();
+                            startActivity(intent);
+                            break;
+                        } else {
+                            Log.d("MascotteTEST" , "je dors en attendant");
+                            sleep(1000);
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+
     }
 
     @Override
@@ -136,6 +195,11 @@ public class CombatReseauSelect extends AppCompatActivity {
         if (requestCode == 3) {
             if (resultCode == RESULT_CANCELED) {
                 Log.d("BLUETOOTH", "discoverable done");
+            } else {
+                thread1 = new AcceptThread(mHandler);
+                //Set la mascotte pour envoi
+                thread1.setMascotte(mascotte);
+                thread1.start();
             }
         }
     }
@@ -150,16 +214,13 @@ public class CombatReseauSelect extends AppCompatActivity {
         }
     }
 
-    private void runBt()
-    {
+    private void runBt() {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
         CharSequence[] cs = new CharSequence[pairedDevices.size()];
 
-        if (pairedDevices.size() > 0)
-        {
-            for(int i = 0; i<pairedDevices.size();i++)
-            {
+        if (pairedDevices.size() > 0) {
+            for (int i = 0; i < pairedDevices.size(); i++) {
                 BluetoothDevice device = (BluetoothDevice) pairedDevices.toArray()[i];
                 listDevice.add(device);
                 Log.d("BLUETOOTH", "Ajout d'un device : " + listDevice);
@@ -169,21 +230,34 @@ public class CombatReseauSelect extends AppCompatActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Bluetooth appairé");
-            builder.setItems(cs, new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int item)
-                {
+            builder.setItems(cs, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
                     BluetoothDevice device = listDevice.get(item);
-                    thread2 = new ConnectThread(device,mascotte);
+                    thread2 = new ConnectThread(device, mascotte);
                     thread2.start();
                 }
             });
             AlertDialog alert = builder.create();
             alert.show();
-
-
         }
-
-
     }
+
+    @Override
+    public void onBackPressed() {
+       stopThreads();
+       finish();
+    }
+
+    public void stopThreads(){
+        if(thread1 != null){
+            thread1.cancel();
+        }
+        if(thread2 != null){
+            thread2.cancel();
+        }
+        if(thread != null){
+            thread.interrupt();
+        }
+    }
+
 }

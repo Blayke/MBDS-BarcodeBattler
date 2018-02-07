@@ -48,6 +48,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             }
         });
 
+        equipements.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EquipementsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         localBattle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         // Exemple : 8 6 9 56 49 9 6
 
         // Mascotte
-        //if (Character.getNumericValue(hashCodeBarre.charAt(0)) <= 5) {
+        if (Character.getNumericValue(hashCodeBarre.charAt(0)) <= 5) {
 
         String nom = "Albie";
         Bitmap image = BitmapFactory.decodeResource(this.getResources(),
@@ -135,11 +143,38 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         intent.putExtra("Image",bs.toByteArray());
         startActivity(intent);
 
-        //}
+        }
         // Equipement
-        /*else {
+        else {
+            String nom = "Epee courte";
+            Bitmap image = BitmapFactory.decodeResource(this.getResources(),
+                    R.drawable.epeecourte);
+            int idImage = getResources().getIdentifier("epeecourte.png", "drawable",this.getPackageName());
+            if (Character.getNumericValue(hashCodeBarre.charAt(1)) <= 5) {
+                nom = "Pugilat légendaire";
+                image = BitmapFactory.decodeResource(this.getResources(),
+                        R.drawable.pugilatlegendaire);
+                idImage = getResources().getIdentifier("pugilatlegendaire.png", "drawable",this.getPackageName());
+            }
 
-        }*/
+
+            String stringVie = String.valueOf(hashCodeBarre.charAt(2) + String.valueOf(hashCodeBarre.charAt(3)));
+            int vie = Integer.parseInt(stringVie);
+
+            int attaque = Character.getNumericValue(hashCodeBarre.charAt(4));
+            int defense = Character.getNumericValue(hashCodeBarre.charAt(5));
+
+            Equipement equipementGagnee = new Equipement(nom, attaque, defense, vie, idImage);
+
+            Log.d("codeBarre", equipementGagnee.toString());
+
+            BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
+            barCoderMaster.addEquipement(equipementGagnee);
+//TODO
+            //Intent intent = new Intent(MainActivity.this, DetailsEquipement.class);
+            //intent.putExtra("equipement", equipementGagnee);
+            //startActivity(intent);
+        }
 
         //Resume scanning
         //mScannerView.resumeCameraPreview(this);

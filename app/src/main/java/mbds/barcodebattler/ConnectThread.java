@@ -88,5 +88,8 @@ public class ConnectThread extends Thread {
         }
     }
 
+    public Mascotte getMascotteEnnemie(){
+        return mascotteEnnemie;
+    }
 
 }

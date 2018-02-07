@@ -40,7 +40,17 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
                 "attaque int not null," +
                 "defense int not null," +
                 "image BLOB);";
+
+        String CREATE_EQUIPEMENT = "CREATE TABLE IF NOT EXISTS EQUIPEMENT " +
+                "(id integer primary key autoincrement," +
+                "nom text not null ," +
+                "idImage int not null ," +
+                "attaque int not null," +
+                "defense int not null," +
+                "vie int not null);";
+
         db.execSQL(CREATE_MASCOTTE);
+        db.execSQL(CREATE_EQUIPEMENT);
     }
 
     @Override
@@ -68,11 +78,32 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addEquipement(Equipement equipement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("nom", equipement.getNom());
+        values.put("vie", equipement.getVie());
+        values.put("attaque", equipement.getAttaque());
+        values.put("defense", equipement.getDefense());
+        values.put("idImage", equipement.getIdImage());
+
+        db.insert("EQUIPEMENT", null, values);
+        db.close();
+    }
+
     public void deleteMascotte(Mascotte mascotte) {
         SQLiteDatabase db = this.getWritableDatabase();
         String where = "ID=" + mascotte.getId();
         Log.d("DELETE", "Vrai id de la mascotte : " + mascotte.getId());
         db.delete("MASCOTTE", where, null);
+        db.close();
+    }
+
+    public void deleteEquipement(Equipement equipement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String where = "ID=" + equipement.getId();
+        Log.d("DELETE", "Vrai id de l'équipement : " + equipement.getId());
+        db.delete("EQUIPEMENT", where, null);
         db.close();
     }
 
@@ -90,6 +121,20 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         byte[] bArray = bos.toByteArray();
         values.put("image", bArray);
         db.update("MASCOTTE", values, "id" + " = ?", new String[]{String.valueOf(mascotte.getId())});
+        db.close();
+
+    }
+
+    public void UpdateEquipement(Equipement equipement)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("nom", equipement.getNom());
+        values.put("vie", equipement.getVie());
+        values.put("attaque", equipement.getAttaque());
+        values.put("defense", equipement.getDefense());
+        values.put("idImage", equipement.getIdImage());
+        db.update("EQUIPEMENT", values, "id" + " = ?", new String[]{String.valueOf(equipement.getId())});
         db.close();
 
     }
@@ -123,10 +168,36 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         }
         return mList;
     }
+
+    protected ArrayList<Equipement> getEquipements() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Equipement> eList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT id, nom, vie, attaque, defense, idImage FROM EQUIPEMENT", null);
+
+        if (cursor != null && cursor.moveToFirst())
+        {
+            do
+            {
+                Equipement e = new Equipement();
+                e.setId(cursor.getInt(0));
+                e.setNom(cursor.getString(1));
+                e.setVie(cursor.getInt(2));
+                e.setAttaque(cursor.getInt(3));
+                e.setDefense(cursor.getInt(4));
+                e.setIdImage(cursor.getInt(5));
+                eList.add(e);
+            } while (cursor.moveToNext());
+
+        }
+        return eList;
+    }
+
     protected void deleteBDD(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String sqlDelete = "delete from MASCOTTE;";
-        db.execSQL(sqlDelete);
+        String sqlDeleteMascotte = "delete from MASCOTTE;";
+        String sqlDeleteEquipement = "delete from EQUIPEMENT";
+        db.execSQL(sqlDeleteMascotte);
+        db.execSQL(sqlDeleteEquipement);
     }
 
     public void remplirBase() {
@@ -149,6 +220,10 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
             m1.setImage(bm);
 
             this.addMascotte(m1);
+        }
+        if(this.getEquipements().size() == 0){
+            Equipement e1 = new Equipement("Épée courte basique",10,20,15,1);
+            Equipement e2 = new Equipement("Pugilat légendaire",30,0,15,2);
         }
     }
 }
