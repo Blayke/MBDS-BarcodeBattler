@@ -44,20 +44,46 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         logsCombat = new ArrayList<>();
         attributionCouleurs = new HashMap();
 
-        mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
-        Bitmap b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("Image1"), 0, getIntent().getByteArrayExtra("Image1").length);
-        mascotte1.setImage(b);
+        Mascotte vainqueur;
 
-        mascotte2 = getIntent().getExtras().getParcelable("mascotte2");
-        b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("Image2"), 0, getIntent().getByteArrayExtra("Image2").length);
-        mascotte2.setImage(b);
-        // Si les deux mascottes sont du même type, on les différencie
-        if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
-            mascotte1.setNom(mascotte1.getNom() + " (1)");
-            mascotte2.setNom(mascotte2.getNom() + " (2)");
+        // Si des logs sont envoyés, on les charge
+        if (getIntent().getSerializableExtra("logsCombat") != null) {
+            // Marche qu'avec list ?
+            this.logsCombat = (ArrayList<LogCombat>) getIntent().getSerializableExtra("logsCombat");
+            mascotte1 = this.logsCombat.get(0).attaquant;
+            mascotte2 = this.logsCombat.get(1).attaquant;
+
+            // Si les deux mascottes sont du même type, on les différencie
+            if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
+                mascotte1.setNom(mascotte1.getNom() + " (1)");
+                mascotte2.setNom(mascotte2.getNom() + " (2)");
+            }
+
+            // vainqueur = dernier attaquant
+            vainqueur = this.logsCombat.get(this.logsCombat.size()-1).attaquant;
         }
+        else {
+
+            mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
+            Bitmap b = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("Image1"), 0, getIntent().getByteArrayExtra("Image1").length);
+            mascotte1.setImage(b);
+
+            mascotte2 = getIntent().getExtras().getParcelable("mascotte2");
+            b = BitmapFactory.decodeByteArray(
+                    getIntent().getByteArrayExtra("Image2"), 0, getIntent().getByteArrayExtra("Image2").length);
+            mascotte2.setImage(b);
+
+            // Si les deux mascottes sont du même type, on les différencie
+            if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
+                mascotte1.setNom(mascotte1.getNom() + " (1)");
+                mascotte2.setNom(mascotte2.getNom() + " (2)");
+            }
+
+            vainqueur = ServiceCombat.lancerCombat(mascotte1, mascotte2, this.logsCombat);
+        }
+
+        nbTours = this.logsCombat.size();
 
         attributionCouleurs.put(mascotte1.getNom(), Color.LTGRAY);
         attributionCouleurs.put(mascotte2.getNom(), Color.GRAY);
@@ -74,7 +100,6 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         imageMascotte2.setImageBitmap(mascotte2.getImage());
         imageMascotte2.setBackgroundColor(Color.GRAY);
 
-        Mascotte vainqueur = lancerCombat();
 
         texteResultat = (TextView) findViewById(R.id.vainqueur);
         texteResultat.setText(texteResultat.getText() + vainqueur.getNom() + "");
@@ -90,77 +115,6 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
 
         logsView = (ListView) findViewById(R.id.logs);
         logsView.setAdapter(this);
-
-    }
-
-    /**
-     * Combat au tour par tour : attaquant tire un nombre aléatoire entre 0 et sa capacité d'attaque
-     * adversaire devra tire un nombre aléatoire entre 0 et sa capacité de défense,
-     * adversaire sera blessé (d’attaque - défense) point de vie
-     * @return vainqueur
-     */
-    public Mascotte lancerCombat() {
-
-        Log.d("COMBAT", "---- DEBUT COMBAT ENTRE " + mascotte1.getNom() + " " + mascotte2.getNom());
-
-        Random rand = new Random();
-
-        // Vitesse pour déterminer le premier ?
-        Mascotte attaquant = mascotte1;
-        Mascotte adversaire = mascotte2;
-
-        int attaqueTour;
-        int defenseTour;
-
-        while(true) {
-
-            Log.d("COMBAT", "-- TOUR " + nbTours);
-            Log.d("COMBAT", "Attaquant : " + attaquant.getNom() + " avec " + attaquant.getVie() + "PV");
-            Log.d("COMBAT", "Adversaire : " + adversaire.getNom() + " avec " + adversaire.getVie() + "PV");
-
-            nbTours++;
-
-            attaqueTour = rand.nextInt(attaquant.getAttaque() + 1);
-            defenseTour = rand.nextInt(adversaire.getDefense() + 1);
-
-            Log.d("COMBAT", "Attaque : " + attaqueTour);
-            Log.d("COMBAT", "Défense : " + defenseTour);
-
-            int attaqueTourApresDefense = attaqueTour - defenseTour;
-            Log.d("COMBAT", "attaqueTourApresDefense : " + attaqueTourApresDefense);
-
-            int attaqueFinale = attaqueTourApresDefense;
-
-            if (attaqueTourApresDefense > -1) {
-
-                Log.d("COMBAT", "Perd " + attaqueTourApresDefense + "PV");
-
-                adversaire.setVie(adversaire.getVie() - attaqueTourApresDefense);
-
-                Log.d("COMBAT", "Adversaire passe à : " + adversaire.getVie() + " PV");
-            }
-            else {
-                attaqueFinale = 0;
-                Log.d("COMBAT", "Pas de PV perdus");
-            }
-
-            try {
-                logsCombat.add(new LogCombat(nbTours, (Mascotte)attaquant.clone(), attaqueFinale, (Mascotte)adversaire.clone()));
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-
-            if (adversaire.getVie() <= 0) {
-                Log.d("COMBAT", "-> Vainqueur : " + attaquant.getNom());
-                return attaquant;
-            }
-
-            Mascotte tmpAdversaire = adversaire;
-            adversaire = attaquant;
-            attaquant = tmpAdversaire;
-
-
-        }
 
     }
 
