@@ -76,9 +76,9 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                 ArrayList<LogCombat> logsCombat = new ArrayList<>();
 
                 ServiceCombat.lancerCombat(m1, m2, logsCombat);
-                intent.putExtra("logsCombat", (Serializable) logsCombat);*/
+                intent.putExtra("logsCombat", (Serializable) logsCombat);
 
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 

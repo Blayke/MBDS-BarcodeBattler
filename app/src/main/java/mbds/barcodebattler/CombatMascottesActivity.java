@@ -55,7 +55,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
             mascotte1 = this.logsCombat.get(0).attaquant;
             mascotte2 = this.logsCombat.get(1).attaquant;
 
-            adapterNomsSiIdentiques();
+            //adapterNomsSiIdentiques();
 
             // vainqueur = dernier attaquant
             vainqueur = this.logsCombat.get(this.logsCombat.size()-1).attaquant;
@@ -65,7 +65,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
             mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
             mascotte2 = getIntent().getExtras().getParcelable("mascotte2");
 
-            adapterNomsSiIdentiques();
+            //adapterNomsSiIdentiques();
 
             vainqueur = ServiceCombat.lancerCombat(mascotte1, mascotte2, this.logsCombat);
         }
@@ -153,6 +153,9 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         else
             returnView = view;
 
+        //Log.d("MEMENOM", "logsCombat.get(i).getAttaquant().getNom() : " + logsCombat.get(i).getAttaquant().getNom());
+        //Log.d("MEMENOM", "attributionCouleurs.keySet(): " + attributionCouleurs.keySet());
+
         returnView.setBackgroundColor((Integer) attributionCouleurs.get(logsCombat.get(i).getAttaquant().getNom()));
 
         ImageView imageViewAttaquant = (ImageView) returnView.findViewById(R.id.imageattaquant);
@@ -194,10 +197,4 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         return (logsCombat.size() == 0);
     }
 
-    public void adapterNomsSiIdentiques() {
-        if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
-            mascotte1.setNom(mascotte1.getNom() + " (1)");
-            mascotte2.setNom(mascotte2.getNom() + " (2)");
-        }
-    }
 }

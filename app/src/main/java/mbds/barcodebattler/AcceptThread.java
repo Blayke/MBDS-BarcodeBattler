@@ -9,9 +9,12 @@ import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class AcceptThread extends Thread {
@@ -24,6 +27,8 @@ public class AcceptThread extends Thread {
     Handler mascotteHandler;
     Mascotte mascotte;
     Mascotte mascotteEnnemie;
+    ArrayList<LogCombat> logsCombat;
+
     public AcceptThread(Handler h) {
         // Use a temporary object that is later assigned to mmServerSocket
         // because mmServerSocket is final.
@@ -85,6 +90,26 @@ public class AcceptThread extends Thread {
             Log.d("BLUETOOTH", message_distant);
             mascotteEnnemie = Mascotte.deserialize(message_distant);
 
+            // On fait le combat, on envoie les logs. Puis on les charge.
+            Log.d("BLUETOOTH", "On va envoyer les logs de combat");
+            ArrayList<LogCombat> logsCombatsSave = new ArrayList<>();
+            ServiceCombat.lancerCombat(mascotte, mascotteEnnemie, logsCombatsSave);
+            Log.d("BLUETOOTH", "Logs de combat remplis, taille :" + logsCombatsSave.size());
+
+            //ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            oos.writeObject(logsCombatsSave);
+            oos.flush();
+            Log.d("BLUETOOTH", "Logs de combat flush");
+            oos.close();
+
+            //byte[] byteToTransfer = oos.getBytes();
+
+            //out.println(this.logsCombat);
+            //out.flush();
+            Log.d("BLUETOOTH", "On sauvegarde nos données de combat");
+            this.logsCombat = logsCombatsSave;
+
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,6 +131,11 @@ public class AcceptThread extends Thread {
 
     public Mascotte getMascotteEnnemie(){
         return mascotteEnnemie;
+    }
+
+    // Dans le thread, on vérifiera si connecthread ou acceptthread a les logs remplis pour les charger
+    public ArrayList<LogCombat> getLogsCombat() {
+        return logsCombat;
     }
 }
 

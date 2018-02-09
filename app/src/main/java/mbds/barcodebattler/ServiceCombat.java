@@ -3,6 +3,7 @@ package mbds.barcodebattler;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -32,6 +33,13 @@ public abstract class ServiceCombat {
 
         int attaqueTour;
         int defenseTour;
+
+        // Adapte si nom identique
+        if (Objects.equals(attaquant.getNom(), adversaire.getNom())) {
+            attaquant.setNom(attaquant.getNom() + " (1)");
+            adversaire.setNom(adversaire.getNom() + " (2)");
+            Log.d("COMBAT", "NOMS CHANGES : " + attaquant.getNom() + " " + adversaire.getNom());
+        }
 
         while(true) {
 

@@ -7,9 +7,14 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -21,6 +26,8 @@ public class ConnectThread extends Thread {
     BluetoothAdapter mBluetoothAdapter;
     Mascotte mascotte;
     Mascotte mascotteEnnemie;
+
+    ArrayList<LogCombat> logsCombat;
 
     public ConnectThread(BluetoothDevice device , Mascotte pMascotte) {
 
@@ -74,6 +81,27 @@ public class ConnectThread extends Thread {
             out.println(mascotte.serialize());
             out.flush();
 
+            // Recois les données du combat
+            Log.d("BLUETOOTH", "On reçoit les données du combat");
+            ObjectInputStream objectInput = new ObjectInputStream(mmSocket.getInputStream());
+            //ByteArrayInputStream input2 = new ByteArrayInputStream();
+            //byte[] bytesFromSocket = objectInput.
+            //bytesFromSocket
+            //ByteArrayInputStream bis = new ByteArrayInputStream();
+            //ObjectInputStream ois = new ObjectOutputStream(bis);
+
+            Object obj = null;
+            try {
+                obj = objectInput.readObject();
+                Log.d("BLUETOOTH", "Objet lu");
+                this.logsCombat = (ArrayList<LogCombat>)obj;
+                Log.d("BLUETOOTH", "Objet sauvegardé et casté");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // pas de base
+            mmSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +118,11 @@ public class ConnectThread extends Thread {
 
     public Mascotte getMascotteEnnemie(){
         return mascotteEnnemie;
+    }
+
+    // Dans le thread, on vérifiera si connecthread ou acceptthread a les logs remplis pour les charger
+    public ArrayList<LogCombat> getLogsCombat() {
+        return logsCombat;
     }
 
 }

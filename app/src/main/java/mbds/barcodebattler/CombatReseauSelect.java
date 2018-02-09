@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -124,21 +125,20 @@ public class CombatReseauSelect extends AppCompatActivity {
             public void run() {
                 try {
                     while (true) {
-                        if((thread1 != null && thread1.getMascotteEnnemie() != null) || (thread2 != null && thread2.getMascotteEnnemie() != null) ){
-                            Mascotte mascotteEnnemi = new Mascotte();
+                        // On attend que des données de combat soient présentes
+                        if((thread1 != null && thread1.getLogsCombat() != null) ||
+                                (thread2 != null && thread2.getLogsCombat() != null)) {
 
-                            if (thread1 != null && thread1.getMascotteEnnemie() != null)
-                                mascotteEnnemi = thread1.getMascotteEnnemie();
-                            if (thread2 != null && thread2.getMascotteEnnemie() != null)
-                                mascotteEnnemi = thread2.getMascotteEnnemie();
-
-                            Log.d("MascotteTEST", "J'ai trouvé un ennemi nommé : " + mascotteEnnemi.getNom());
-                            Log.d("MascotteTEST", "J'ai ma mascotte : " + mascotte.getNom());
+                            ArrayList<LogCombat> logsCombat = new ArrayList<>();
+                            if (thread1 != null && thread1.getLogsCombat() != null)
+                                logsCombat = thread1.getLogsCombat();
+                            if (thread2 != null && thread2.getLogsCombat() != null)
+                                logsCombat = thread2.getLogsCombat();
 
                             Intent intent = new Intent(CombatReseauSelect.this, CombatMascottesActivity.class);
 
-                            intent.putExtra("mascotte1", (Parcelable) mascotte);
-                            intent.putExtra("mascotte2", (Parcelable) mascotteEnnemi);
+                            Log.d("BLUETOOTH", "On a récupéré logsCombat, taille : " + logsCombat.size());
+                            intent.putExtra("logsCombat", (Serializable) logsCombat);
 
                             this.interrupt();
                             startActivity(intent);
