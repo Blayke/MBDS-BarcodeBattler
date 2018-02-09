@@ -17,7 +17,7 @@
 
     <TextView
         android:text="5"
-        android:textSize="25dp"
+        android:textSize="18dp"
         android:id="@+id/attaque"
         android:layout_width="0dp"
         android:layout_weight="2"
@@ -50,7 +50,7 @@
 
     <TextView
         android:text="10"
-        android:textSize="25dp"
+        android:textSize="18dp"
         android:id="@+id/pv"
         android:layout_width="0dp"
         android:layout_weight="2"
