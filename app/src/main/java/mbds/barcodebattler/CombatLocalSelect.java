@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -68,9 +69,9 @@ public class CombatLocalSelect extends AppCompatActivity {
                 Intent intent = new Intent(CombatLocalSelect.this, CombatMascottesActivity.class);
 
 
-                intent.putExtra("mascotte1", mascotte1);
+                intent.putExtra("mascotte1", (Parcelable)mascotte1);
 
-                intent.putExtra("mascotte2", mascotte2);
+                intent.putExtra("mascotte2", (Parcelable) mascotte2);
 
                 startActivity(intent);
             }

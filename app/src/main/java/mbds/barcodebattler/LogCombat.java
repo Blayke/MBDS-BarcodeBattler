@@ -1,10 +1,12 @@
 package mbds.barcodebattler;
 
+import java.io.Serializable;
+
 /**
  * Created by laeticiapierre on 27/10/2017.
  */
 
-public class LogCombat {
+public class LogCombat implements Serializable {
 
     int numTour;
     Mascotte attaquant;

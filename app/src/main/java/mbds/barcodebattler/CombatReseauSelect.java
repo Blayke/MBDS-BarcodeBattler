@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -136,8 +137,8 @@ public class CombatReseauSelect extends AppCompatActivity {
 
                             Intent intent = new Intent(CombatReseauSelect.this, CombatMascottesActivity.class);
 
-                            intent.putExtra("mascotte1", mascotte);
-                            intent.putExtra("mascotte2", mascotteEnnemi);
+                            intent.putExtra("mascotte1", (Parcelable) mascotte);
+                            intent.putExtra("mascotte2", (Parcelable) mascotteEnnemi);
 
                             this.interrupt();
                             startActivity(intent);

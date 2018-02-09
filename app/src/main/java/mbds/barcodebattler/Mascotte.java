@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  */
 
 @Root
-public class Mascotte implements Cloneable, Parcelable {
+public class Mascotte implements Cloneable, Parcelable, Serializable {
     private int id;
     @Element
     private String nom;

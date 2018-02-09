@@ -46,8 +46,12 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
 
         // Si des logs sont envoyés, on les charge
         if (getIntent().getSerializableExtra("logsCombat") != null) {
+            Log.d("LOGCOMBAT", "On est dans le if");
             // Marche qu'avec list ?
             this.logsCombat = (ArrayList<LogCombat>) getIntent().getSerializableExtra("logsCombat");
+            Log.d("LOGCOMBAT", "Ok compris");
+            Log.d("LOGCOMBAT", logsCombat.size()+"");
+
             mascotte1 = this.logsCombat.get(0).attaquant;
             mascotte2 = this.logsCombat.get(1).attaquant;
 

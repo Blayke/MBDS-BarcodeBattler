@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import com.google.zxing.Result;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -60,6 +63,21 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CombatLocalSelect.class);
+                startActivity(intent);
+
+                /*int idImage = getResources().getIdentifier("alex", "drawable", getPackageName());
+                Mascotte m1 = new Mascotte("Alex", 20, 65, 40, 30, idImage);
+
+                idImage = getResources().getIdentifier("ame_des_aspects", "drawable", getPackageName());
+                Mascotte m2 = new Mascotte("Âme des aspects", 40, 100, 30, 20, idImage);
+
+                Intent intent = new Intent(MainActivity.this, CombatMascottesActivity.class);
+
+                ArrayList<LogCombat> logsCombat = new ArrayList<>();
+
+                ServiceCombat.lancerCombat(m1, m2, logsCombat);
+                intent.putExtra("logsCombat", (Serializable) logsCombat);*/
+
                 startActivity(intent);
             }
         });
@@ -131,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         barCoderMaster.addMascotte(mascotteGagnee);
 
         Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
-        intent.putExtra("mascotte", mascotteGagnee);
+        intent.putExtra("mascotte", (Parcelable) mascotteGagnee);
 
         startActivity(intent);
 

@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -131,7 +132,7 @@ public class ListMascotte extends AppCompatActivity implements ListAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 Mascotte mascotte = listeMascotte.get(v.getId());
-                intent.putExtra("Mascotte", mascotte);
+                intent.putExtra("Mascotte", (Parcelable) mascotte);
                 setResult(1, intent);
                 finish();
             }
