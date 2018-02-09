@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -116,30 +117,21 @@ public class ListMascotte extends AppCompatActivity implements ListAdapter {
 
         final ImageView image = (ImageView) returnView.findViewById(R.id.IV);
 
-        if (listeMascotte.get(i).getImage() != null) {
-            image.setImageBitmap(listeMascotte.get(i).getImage());
+        if (listeMascotte.get(i).getIdImage() != 0) {
+            Drawable img = getResources().getDrawable( listeMascotte.get(i).getIdImage());
+            Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+            image.setImageBitmap(imgBitmap);
         } else {
             image.setImageBitmap(null);
         }
 
-//        if (barCoderMaster.getMascottes().get(i).getImage() != null) {
-//            image.setImageBitmap(barCoderMaster.getMascottes().get(i).getImage());
-//        } else {
-//            image.setImageBitmap(null);
-//        }
         returnView.setOnClickListener(new View.OnClickListener() {
             @Override
             //Sur une Cell
             public void onClick(View v) {
                 Intent intent = new Intent();
                 Mascotte mascotte = listeMascotte.get(v.getId());
-                Bitmap b = mascotte.getImage();
-                ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                b.compress(Bitmap.CompressFormat.PNG, 50, bs);
-
-                mascotte.setImage(null);
                 intent.putExtra("Mascotte", mascotte);
-                intent.putExtra("Image", bs.toByteArray());
                 setResult(1, intent);
                 finish();
             }

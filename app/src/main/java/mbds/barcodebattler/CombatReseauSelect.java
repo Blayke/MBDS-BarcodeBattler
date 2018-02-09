@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -134,24 +136,9 @@ public class CombatReseauSelect extends AppCompatActivity {
 
                             Intent intent = new Intent(CombatReseauSelect.this, CombatMascottesActivity.class);
 
-                            Bitmap b = mascotte.getImage();
-                            Log.d("MascotteTest", "J'ai une image ! " + mascotte.getImage());
-                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
-                            Log.d("MascotteTest", "L'image compressé est : " + bs.toByteArray());
-                            mascotte.setImage(null);
                             intent.putExtra("mascotte1", mascotte);
-                            intent.putExtra("Image1", bs.toByteArray());
-
-                            mascotteEnnemi.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.pokemonombre));
-                            b = mascotteEnnemi.getImage();
-
-                            bs = new ByteArrayOutputStream();
-                            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
-
-                            mascotteEnnemi.setImage(null);
                             intent.putExtra("mascotte2", mascotteEnnemi);
-                            intent.putExtra("Image2", bs.toByteArray());
+
                             this.interrupt();
                             startActivity(intent);
                             break;
@@ -178,10 +165,11 @@ public class CombatReseauSelect extends AppCompatActivity {
                 if (mascotte != null) {
                     TextView txtMascotte1 = (TextView) findViewById(R.id.nommascotte);
                     txtMascotte1.setText(mascotte.getNom());
-                    Bitmap b = BitmapFactory.decodeByteArray(
-                            data.getByteArrayExtra("Image"), 0, data.getByteArrayExtra("Image").length);
-                    mascotte.setImage(b);
-                    imageMascotte.setImageBitmap(b);
+
+                    Drawable img = getResources().getDrawable( mascotte.getIdImage());
+                    Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+
+                    imageMascotte.setImageBitmap(imgBitmap);
                     this.hideButton(false);
                 }
             }

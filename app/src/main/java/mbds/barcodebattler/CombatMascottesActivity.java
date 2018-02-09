@@ -4,6 +4,8 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,14 +47,13 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         attributionCouleurs = new HashMap();
 
         mascotte1 = getIntent().getExtras().getParcelable("mascotte1");
-        Bitmap b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("Image1"), 0, getIntent().getByteArrayExtra("Image1").length);
-        mascotte1.setImage(b);
+        Drawable img1 = getResources().getDrawable( mascotte1.getIdImage());
+        Bitmap imgBitmap1 = ((BitmapDrawable) img1).getBitmap();
 
         mascotte2 = getIntent().getExtras().getParcelable("mascotte2");
-        b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("Image2"), 0, getIntent().getByteArrayExtra("Image2").length);
-        mascotte2.setImage(b);
+        Drawable img2 = getResources().getDrawable( mascotte2.getIdImage());
+        Bitmap imgBitmap2 = ((BitmapDrawable) img2).getBitmap();
+
         // Si les deux mascottes sont du même type, on les différencie
         if (Objects.equals(mascotte1.getNom(), mascotte2.getNom())) {
             mascotte1.setNom(mascotte1.getNom() + " (1)");
@@ -65,13 +66,13 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         imageMascotte1 = (ImageView) findViewById(R.id.imagemascotte1);
         //Bitmap i1 = BitmapFactory.decodeResource(getResources(), R.drawable.ame_des_aspects);
         //mascotte1.setImage(i1);
-        imageMascotte1.setImageBitmap(mascotte1.getImage());
+        imageMascotte1.setImageBitmap(imgBitmap1);
         imageMascotte1.setBackgroundColor(Color.LTGRAY);
 
         imageMascotte2 = (ImageView) findViewById(R.id.imagemascotte2);
         //Bitmap i2 = BitmapFactory.decodeResource(getResources(), R.drawable.albie);
         //mascotte2.setImage(i2);
-        imageMascotte2.setImageBitmap(mascotte2.getImage());
+        imageMascotte2.setImageBitmap(imgBitmap2);
         imageMascotte2.setBackgroundColor(Color.GRAY);
 
         Mascotte vainqueur = lancerCombat();
@@ -216,18 +217,15 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         returnView.setBackgroundColor((Integer) attributionCouleurs.get(logsCombat.get(i).getAttaquant().getNom()));
 
         ImageView imageViewAttaquant = (ImageView) returnView.findViewById(R.id.imageattaquant);
-        Bitmap image = logsCombat.get(i).getAttaquant().getImage();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        Bitmap b = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
-        imageViewAttaquant.setImageBitmap(Bitmap.createScaledBitmap(b, 80, 80, false));
+        Drawable img = getResources().getDrawable( logsCombat.get(i).getAttaquant().getIdImage());
+        Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+
+        imageViewAttaquant.setImageBitmap(imgBitmap);
 
         ImageView imageViewAdversaire = (ImageView) returnView.findViewById(R.id.imageadversaire);
-        image = logsCombat.get(i).getAdversaireApresAttaque().getImage();
-        stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        b = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.toByteArray().length);
-        imageViewAdversaire.setImageBitmap(Bitmap.createScaledBitmap(b, 80, 80, false));
+        img = getResources().getDrawable( logsCombat.get(i).getAdversaireApresAttaque().getIdImage());
+        imgBitmap = ((BitmapDrawable) img).getBitmap();
+        imageViewAdversaire.setImageBitmap(imgBitmap);
 
         TextView textViewAttaque = (TextView) returnView.findViewById(R.id.attaque);
         textViewAttaque.setText(logsCombat.get(i).attaque + "");

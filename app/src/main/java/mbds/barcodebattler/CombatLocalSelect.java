@@ -3,6 +3,8 @@ package mbds.barcodebattler;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -65,21 +67,10 @@ public class CombatLocalSelect extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CombatLocalSelect.this, CombatMascottesActivity.class);
 
-                Bitmap b = mascotte1.getImage();
-                ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                b.compress(Bitmap.CompressFormat.PNG, 50, bs);
 
-                mascotte1.setImage(null);
                 intent.putExtra("mascotte1", mascotte1);
-                intent.putExtra("Image1", bs.toByteArray());
 
-                b = mascotte2.getImage();
-                bs = new ByteArrayOutputStream();
-                b.compress(Bitmap.CompressFormat.PNG, 50, bs);
-
-                mascotte2.setImage(null);
                 intent.putExtra("mascotte2", mascotte2);
-                intent.putExtra("Image2", bs.toByteArray());
 
                 startActivity(intent);
             }
@@ -101,10 +92,10 @@ public class CombatLocalSelect extends AppCompatActivity {
                 if (mascotte1 != null) {
                     TextView txtMascotte1 = (TextView) findViewById(R.id.nommascotte1);
                     txtMascotte1.setText(mascotte1.getNom());
-                    Bitmap b = BitmapFactory.decodeByteArray(
-                            data.getByteArrayExtra("Image"), 0, data.getByteArrayExtra("Image").length);
-                    mascotte1.setImage(b);
-                    imageMascotte1.setImageBitmap(b);
+
+                    Drawable img = getResources().getDrawable( mascotte1.getIdImage());
+                    Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+                    imageMascotte1.setImageBitmap(imgBitmap);
                 }
             }
         }
@@ -114,10 +105,10 @@ public class CombatLocalSelect extends AppCompatActivity {
                 if (mascotte2 != null) {
                     TextView txtMascotte2 = (TextView) findViewById(R.id.nommascotte2);
                     txtMascotte2.setText(mascotte2.getNom());
-                    Bitmap b = BitmapFactory.decodeByteArray(
-                            data.getByteArrayExtra("Image"), 0, data.getByteArrayExtra("Image").length);
-                    mascotte2.setImage(b);
-                    imageMascotte2.setImageBitmap(b);
+
+                    Drawable img = getResources().getDrawable( mascotte2.getIdImage());
+                    Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+                    imageMascotte2.setImageBitmap(imgBitmap);
                 }
             }
         }

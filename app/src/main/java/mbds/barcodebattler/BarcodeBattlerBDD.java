@@ -21,7 +21,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "GESTION_ETUDIANT.db";
+    private static final String DATABASE_NAME = "GESTION_BARCODEBATTLE.db";
     private Context context;
 
     public BarcodeBattlerBDD(Context context) {
@@ -39,7 +39,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
                 "vie int not null," +
                 "attaque int not null," +
                 "defense int not null," +
-                "image BLOB);";
+                "idImage int not null);";
 
         String CREATE_EQUIPEMENT = "CREATE TABLE IF NOT EXISTS EQUIPEMENT " +
                 "(id integer primary key autoincrement," +
@@ -66,14 +66,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         values.put("vie", mascotte.getVie());
         values.put("attaque", mascotte.getAttaque());
         values.put("defense", mascotte.getDefense());
-
-        if(mascotte.getImage() != null){
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            mascotte.getImage().compress(Bitmap.CompressFormat.PNG, 100, bos);
-            byte[] bArray = bos.toByteArray();
-            values.put("image", bArray);
-        }
-
+        values.put("idImage", mascotte.getIdImage());
         db.insert("MASCOTTE", null, values);
         db.close();
     }
@@ -107,8 +100,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void UpdateMacotte(Mascotte mascotte)
-    {
+    public void UpdateMacotte(Mascotte mascotte) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("nom", mascotte.getNom());
@@ -116,17 +108,13 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         values.put("vie", mascotte.getVie());
         values.put("attaque", mascotte.getAttaque());
         values.put("defense", mascotte.getDefense());
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        mascotte.getImage().compress(Bitmap.CompressFormat.PNG, 100, bos);
-        byte[] bArray = bos.toByteArray();
-        values.put("image", bArray);
+        values.put("idImage", mascotte.getIdImage());
         db.update("MASCOTTE", values, "id" + " = ?", new String[]{String.valueOf(mascotte.getId())});
         db.close();
 
     }
 
-    public void UpdateEquipement(Equipement equipement)
-    {
+    public void UpdateEquipement(Equipement equipement) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("nom", equipement.getNom());
@@ -142,12 +130,10 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     protected ArrayList<Mascotte> getMascottes() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Mascotte> mList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT id, nom, niveau, vie, attaque, defense, image FROM MASCOTTE", null);
+        Cursor cursor = db.rawQuery("SELECT id, nom, niveau, vie, attaque, defense, idImage FROM MASCOTTE", null);
 
-        if (cursor != null && cursor.moveToFirst())
-        {
-            do
-            {
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
                 //traiter la ligne
                 Mascotte m = new Mascotte();
                 m.setId(cursor.getInt(0));
@@ -156,12 +142,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
                 m.setVie(cursor.getInt(3));
                 m.setAttaque(cursor.getInt(4));
                 m.setDefense(cursor.getInt(5));
-
-
-                if(cursor.getBlob(6) != null){
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(cursor.getBlob(6), 0, cursor.getBlob(6).length);
-                    m.setImage(bitmap);
-                }
+                m.setIdImage(cursor.getInt(6));
                 mList.add(m);
             } while (cursor.moveToNext());
 
@@ -174,10 +155,8 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         ArrayList<Equipement> eList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT id, nom, vie, attaque, defense, idImage FROM EQUIPEMENT", null);
 
-        if (cursor != null && cursor.moveToFirst())
-        {
-            do
-            {
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
                 Equipement e = new Equipement();
                 e.setId(cursor.getInt(0));
                 e.setNom(cursor.getString(1));
@@ -192,7 +171,7 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
         return eList;
     }
 
-    protected void deleteBDD(){
+    protected void deleteBDD() {
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlDeleteMascotte = "delete from MASCOTTE;";
         String sqlDeleteEquipement = "delete from EQUIPEMENT";
@@ -201,29 +180,36 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     }
 
     public void remplirBase() {
+        //TODO enlever le delete
+        deleteBDD();
         if (this.getMascottes().size() == 0) {
+            int idImage = this.getIdImage("albie");
+            Mascotte m1 = new Mascotte("Albie", 15, 20, 50, 15, idImage);
+            this.addMascotte(m1);
 
-            Mascotte m1 = new Mascotte("Albie", 15, 20, 50, 15);
-            Bitmap bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.albie);
-            m1.setImage(bm);
+            idImage = this.getIdImage("alex");
+            m1 = new Mascotte("Alex", 20, 65, 40, 30, idImage);
+
 
             this.addMascotte(m1);
 
-            m1 = new Mascotte("Alex", 20, 65, 40 , 30);
-            bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.alex);
-            m1.setImage(bm);
-
-            this.addMascotte(m1);
-
-            m1 = new Mascotte("Âme des aspects", 40, 100, 30 , 20);
-            bm = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.ame_des_aspects);
-            m1.setImage(bm);
+            idImage = this.getIdImage("ame_des_aspects");
+            m1 = new Mascotte("Âme des aspects", 40, 100, 30, 20, idImage);
 
             this.addMascotte(m1);
         }
-        if(this.getEquipements().size() == 0){
-            Equipement e1 = new Equipement("Épée courte basique",10,20,15,1);
-            Equipement e2 = new Equipement("Pugilat légendaire",30,0,15,2);
+        if (this.getEquipements().size() == 0) {
+            int idImage = getIdImage("epeecourte");
+            Equipement e1 = new Equipement("Épée courte basique", 10, 20, 15, idImage);
+            idImage = getIdImage("pugilatlegendaire");
+            Equipement e2 = new Equipement("Pugilat légendaire", 30, 0, 15, idImage);
+            this.addEquipement(e1);
+            this.addEquipement(e2);
+
         }
+    }
+
+    public int getIdImage(String nomImage){
+        return context.getResources().getIdentifier(nomImage, "drawable", context.getPackageName());
     }
 }

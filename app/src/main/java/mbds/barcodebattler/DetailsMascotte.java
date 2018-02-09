@@ -2,6 +2,8 @@ package mbds.barcodebattler;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,9 +27,7 @@ public class DetailsMascotte extends AppCompatActivity {
         setContentView(R.layout.details_mascotte);
 
         mascotte = getIntent().getExtras().getParcelable("mascotte");
-        Bitmap b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("Image"), 0, getIntent().getByteArrayExtra("Image").length);
-        mascotte.setImage(b);
+
         textViewNomMascotte = (TextView) findViewById(R.id.nom);
         textViewNomMascotte.setText(mascotte.getNom() + "");
 
@@ -44,7 +44,10 @@ public class DetailsMascotte extends AppCompatActivity {
         textViewDefenseMascotte.setText(mascotte.getDefense() + "");
 
         imageViewImageMascotte = (ImageView) findViewById(R.id.image);
-        imageViewImageMascotte.setImageBitmap(mascotte.getImage());
+
+        Drawable img = getResources().getDrawable( mascotte.getIdImage());
+        Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+        imageViewImageMascotte.setImageBitmap(imgBitmap);
 
         Button btnRetour = (Button) findViewById(R.id.retour);
         btnRetour.setOnClickListener(new View.OnClickListener() {

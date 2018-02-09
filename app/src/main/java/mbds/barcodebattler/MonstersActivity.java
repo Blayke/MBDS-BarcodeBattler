@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -115,8 +117,10 @@ public class MonstersActivity extends AppCompatActivity implements ListAdapter {
         defense.setText(String.format("%s", listeMascotte.get(i).getDefense()));
 
         ImageView image = returnView.findViewById(R.id.IV);
-        if (listeMascotte.get(i).getImage() != null) {
-            image.setImageBitmap(listeMascotte.get(i).getImage());
+        if (listeMascotte.get(i).getIdImage() != 0) {
+            Drawable img = getResources().getDrawable( listeMascotte.get(i).getIdImage());
+            Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
+            image.setImageBitmap(imgBitmap);
         } else {
             image.setImageBitmap(null);
         }

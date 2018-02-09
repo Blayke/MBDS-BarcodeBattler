@@ -106,14 +106,12 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         // Mascotte
         if (Character.getNumericValue(hashCodeBarre.charAt(0)) <= 5) {
-
+        int idImage;
         String nom = "Albie";
-        Bitmap image = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.albie);
+            idImage = getResources().getIdentifier("albie", "drawable",this.getPackageName());
         if (Character.getNumericValue(hashCodeBarre.charAt(1)) <= 5) {
             nom = "Alex";
-            image = BitmapFactory.decodeResource(this.getResources(),
-                    R.drawable.alex);
+            idImage = getResources().getIdentifier("alex", "drawable",this.getPackageName());
         }
 
         String stringNiveau = String.valueOf(hashCodeBarre.charAt(2) + String.valueOf(hashCodeBarre.charAt(3)));
@@ -125,36 +123,27 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         int attaque = Character.getNumericValue(hashCodeBarre.charAt(6));
         int defense = Character.getNumericValue(hashCodeBarre.charAt(7));
 
-        Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense);
+        Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense, idImage);
 
         Log.d("codeBarre", mascotteGagnee.toString());
 
         BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
-        mascotteGagnee.setImage(image);
         barCoderMaster.addMascotte(mascotteGagnee);
-        mascotteGagnee.setImage(null); // On passe l'image en compresser
 
         Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
         intent.putExtra("mascotte", mascotteGagnee);
 
-        Bitmap b = image;
-        ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        b.compress(Bitmap.CompressFormat.PNG, 50, bs);
-        intent.putExtra("Image",bs.toByteArray());
         startActivity(intent);
 
         }
         // Equipement
         else {
             String nom = "Epee courte";
-            Bitmap image = BitmapFactory.decodeResource(this.getResources(),
-                    R.drawable.epeecourte);
-            int idImage = getResources().getIdentifier("epeecourte.png", "drawable",this.getPackageName());
+
+            int idImage = getResources().getIdentifier("epeecourte", "drawable",this.getPackageName());
             if (Character.getNumericValue(hashCodeBarre.charAt(1)) <= 5) {
-                nom = "Pugilat légendaire";
-                image = BitmapFactory.decodeResource(this.getResources(),
-                        R.drawable.pugilatlegendaire);
-                idImage = getResources().getIdentifier("pugilatlegendaire.png", "drawable",this.getPackageName());
+
+                idImage = getResources().getIdentifier("pugilatlegendaire", "drawable",this.getPackageName());
             }
 
 

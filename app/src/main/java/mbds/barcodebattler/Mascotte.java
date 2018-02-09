@@ -41,19 +41,22 @@ public class Mascotte implements Cloneable, Parcelable {
     private int attaque;
     @Element
     private int defense;
-    private Bitmap image;
+    @Element
+    private int idImage;
+
     private ArrayList<Equipement> equipements;
 
     public Mascotte() {
 
     }
 
-    public Mascotte(String nom, int niveau, int vie, int attaque, int defense) {
+    public Mascotte(String nom, int niveau, int vie, int attaque, int defense, int idImage) {
         this.nom = nom;
         this.niveau = niveau;
         this.vie = vie;
         this.attaque = attaque;
         this.defense = defense;
+        this.idImage = idImage;
         this.equipements = new ArrayList<>();
     }
 
@@ -64,12 +67,7 @@ public class Mascotte implements Cloneable, Parcelable {
         this.vie = in.readInt();
         this.attaque = in.readInt();
         this.defense = in.readInt();
-        /*try {
-            this.image = in.readParcelable(Bitmap.class.getClassLoader());
-        } catch (Exception e) {
-            Log.e("error", "parcelable image");
-        }*/
-        this.image = null;
+        this.idImage = in.readInt();
 
         //TODO
         this.equipements = new ArrayList<>();
@@ -131,12 +129,12 @@ public class Mascotte implements Cloneable, Parcelable {
         this.defense = defense;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public int getIdImage() {
+        return idImage;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setIdImage(int idImage) {
+        this.idImage = idImage;
     }
 
     public ArrayList<Equipement> getEquipements() {
@@ -177,7 +175,7 @@ public class Mascotte implements Cloneable, Parcelable {
         parcel.writeInt(this.vie);
         parcel.writeInt(this.attaque);
         parcel.writeInt(this.defense);
-        if (this.image != null) parcel.writeParcelable(this.image, i);
+        parcel.writeInt(this.idImage);
 
         //TODO equipements
     }
