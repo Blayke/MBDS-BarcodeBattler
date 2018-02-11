@@ -1,5 +1,6 @@
 package mbds.barcodebattler;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -53,7 +54,8 @@ public class DetailsMascotte extends AppCompatActivity {
         btnRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent =new Intent(DetailsMascotte.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 

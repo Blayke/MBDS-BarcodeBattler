@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class ListEquipement extends AppCompatActivity  implements ListAdapter {
@@ -88,7 +88,7 @@ public class ListEquipement extends AppCompatActivity  implements ListAdapter {
         View returnView;
         if (view == null) {
 //            on va glonfer le xml
-            returnView = View.inflate(this, R.layout.liste_monstre, null);
+            returnView = View.inflate(this, R.layout.liste_equipement, null);
         } else {
             returnView = view;
         }
@@ -125,13 +125,17 @@ public class ListEquipement extends AppCompatActivity  implements ListAdapter {
 //        } else {
 //            image.setImageBitmap(null);
 //        }
-//        returnView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            //Sur une Cell
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        returnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            //Sur une Cell
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                Equipement equipement = listeEquipement.get(v.getId());
+                intent.putExtra("Equipement", (Parcelable) equipement);
+                setResult(1, intent);
+                finish();
+            }
+        });
         return returnView;
     }
 

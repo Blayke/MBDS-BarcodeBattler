@@ -91,7 +91,7 @@ public class EquipementsActivity extends AppCompatActivity implements ListAdapte
     public View getView(int i, View view, ViewGroup viewGroup) {
         View returnView;
         if (view == null) {
-            returnView = View.inflate(this, R.layout.list_equipement_etendue, null);
+            returnView = View.inflate(this, R.layout.liste_equipement_etendue, null);
         } else {
             returnView = view;
         }

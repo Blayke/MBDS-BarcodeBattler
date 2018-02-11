@@ -44,8 +44,8 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
     private int defense;
     @Element
     private int idImage;
-
-    private ArrayList<Equipement> equipements;
+    @Element
+    private int idEquipement;
 
     public Mascotte() {
 
@@ -58,7 +58,6 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
         this.attaque = attaque;
         this.defense = defense;
         this.idImage = idImage;
-        this.equipements = new ArrayList<>();
     }
 
     protected Mascotte(Parcel in) {
@@ -69,9 +68,6 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
         this.attaque = in.readInt();
         this.defense = in.readInt();
         this.idImage = in.readInt();
-
-        //TODO
-        this.equipements = new ArrayList<>();
     }
 
     public static final Creator<Mascotte> CREATOR = new Creator<Mascotte>() {
@@ -138,12 +134,12 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
         this.idImage = idImage;
     }
 
-    public ArrayList<Equipement> getEquipements() {
-        return equipements;
+    public int getIdEquipement() {
+        return idEquipement;
     }
 
-    public void setEquipements(ArrayList<Equipement> equipements) {
-        this.equipements = equipements;
+    public void setIdEquipement(int idEquipement) {
+        this.idEquipement = idEquipement;
     }
 
     @Override
@@ -159,7 +155,6 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
                 ", vie=" + vie +
                 ", attaque=" + attaque +
                 ", defense=" + defense +
-                ", equipements=" + equipements +
                 '}';
     }
 
@@ -177,8 +172,6 @@ public class Mascotte implements Cloneable, Parcelable, Serializable {
         parcel.writeInt(this.attaque);
         parcel.writeInt(this.defense);
         parcel.writeInt(this.idImage);
-
-        //TODO equipements
     }
 
     public String serialize() {

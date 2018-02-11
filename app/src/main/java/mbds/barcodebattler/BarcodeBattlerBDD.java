@@ -180,8 +180,6 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     }
 
     public void remplirBase() {
-        //TODO enlever le delete
-        deleteBDD();
         if (this.getMascottes().size() == 0) {
             int idImage = this.getIdImage("albie");
             Mascotte m1 = new Mascotte("Albie", 25, 40, 13, 10, idImage);
