@@ -33,6 +33,7 @@ public class CombatReseauSelect extends AppCompatActivity {
 
     ImageView imageMascotte;
     Mascotte mascotte;
+    Equipement equipement;
     Button btnAccepteCombat;
     Button btnRetour;
     Button btnChercher;
@@ -42,6 +43,9 @@ public class CombatReseauSelect extends AppCompatActivity {
     ConnectThread thread2;
     public Handler mHandler;
     Thread thread;
+    Button btnEquipement;
+    TextView equipementNomText;
+    Button btnDeleteEquipement;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -69,9 +73,14 @@ public class CombatReseauSelect extends AppCompatActivity {
         listDevice = new ArrayList<>();
         imageMascotte = (ImageView) findViewById(R.id.imagemascotte);
         btnAccepteCombat = (Button) findViewById(R.id.accepteCombat);
+        btnEquipement = (Button) findViewById(R.id.equipement);
         btnRetour = (Button) findViewById(R.id.retour);
         btnChercher = (Button) findViewById(R.id.chercher);
+        equipementNomText = (TextView) findViewById(R.id.equipementNom);
+        btnDeleteEquipement = (Button) findViewById(R.id.deleteEquipement);
+
         this.hideButton(true);
+        this.hideButtonEquipement(true);
 
         //INSCRIPTION
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -84,11 +93,33 @@ public class CombatReseauSelect extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
+        btnEquipement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CombatReseauSelect.this, ListEquipement.class);
+                startActivityForResult(intent, 4);
+            }
+        });
+
+
         btnRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 stopThreads();
                 finish();
+            }
+        });
+
+        btnDeleteEquipement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mascotte.setVie(mascotte.getVie() - equipement.getVie());
+                mascotte.setAttaque(mascotte.getAttaque() - equipement.getAttaque());
+                mascotte.setDefense(mascotte.getDefense() - equipement.getDefense());
+                equipementNomText.setText("");
+                btnDeleteEquipement.setVisibility(View.GONE);
+                equipement = null;
             }
         });
 
@@ -126,7 +157,7 @@ public class CombatReseauSelect extends AppCompatActivity {
                 try {
                     while (true) {
                         // On attend que des données de combat soient présentes
-                        if((thread1 != null && thread1.getLogsCombat() != null) ||
+                        if ((thread1 != null && thread1.getLogsCombat() != null) ||
                                 (thread2 != null && thread2.getLogsCombat() != null)) {
 
                             ArrayList<LogCombat> logsCombat = new ArrayList<>();
@@ -144,7 +175,6 @@ public class CombatReseauSelect extends AppCompatActivity {
                             startActivity(intent);
                             break;
                         } else {
-                            Log.d("MascotteTEST" , "je dors en attendant");
                             sleep(1000);
                         }
                     }
@@ -164,10 +194,11 @@ public class CombatReseauSelect extends AppCompatActivity {
             if (resultCode == 1) {
                 mascotte = data.getExtras().getParcelable("Mascotte");
                 if (mascotte != null) {
+                    hideButton(false);
                     TextView txtMascotte1 = (TextView) findViewById(R.id.nommascotte);
                     txtMascotte1.setText(mascotte.getNom());
 
-                    Drawable img = getResources().getDrawable( mascotte.getIdImage());
+                    Drawable img = getResources().getDrawable(mascotte.getIdImage());
                     Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
 
                     imageMascotte.setImageBitmap(imgBitmap);
@@ -191,15 +222,37 @@ public class CombatReseauSelect extends AppCompatActivity {
                 thread1.start();
             }
         }
+        if (requestCode == 4) {
+            if (resultCode == 1) {
+                this.hideButtonEquipement(false);
+                equipement = data.getExtras().getParcelable("Equipement");
+                equipementNomText.setText(equipement.getNom());
+                mascotte.setAttaque(mascotte.getAttaque() + equipement.getAttaque());
+                mascotte.setDefense(mascotte.getDefense() + equipement.getDefense());
+                mascotte.setVie(mascotte.getVie() + equipement.getVie());
+            }
+        }
     }
 
     private void hideButton(boolean bool) {
         if (bool) {
             btnAccepteCombat.setVisibility(View.GONE);
             btnChercher.setVisibility(View.GONE);
+            btnEquipement.setVisibility(View.GONE);
         } else {
             btnAccepteCombat.setVisibility(View.VISIBLE);
             btnChercher.setVisibility(View.VISIBLE);
+            btnEquipement.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideButtonEquipement(boolean bool) {
+        if (bool) {
+            equipementNomText.setVisibility(View.GONE);
+            btnDeleteEquipement.setVisibility(View.GONE);
+        } else {
+            equipementNomText.setVisibility(View.VISIBLE);
+            btnDeleteEquipement.setVisibility(View.VISIBLE);
         }
     }
 
@@ -233,18 +286,18 @@ public class CombatReseauSelect extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       stopThreads();
-       finish();
+        stopThreads();
+        finish();
     }
 
-    public void stopThreads(){
-        if(thread1 != null){
+    public void stopThreads() {
+        if (thread1 != null) {
             thread1.cancel();
         }
-        if(thread2 != null){
+        if (thread2 != null) {
             thread2.cancel();
         }
-        if(thread != null){
+        if (thread != null) {
             thread.interrupt();
         }
     }
