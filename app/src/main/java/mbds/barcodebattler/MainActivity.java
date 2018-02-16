@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -248,8 +249,15 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        AudioManager mAudioManager = (AudioManager)  getSystemService(Context.AUDIO_SERVICE);
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             onBackPressed();
+        }
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_LOWER,AudioManager.FX_FOCUS_NAVIGATION_UP);
+        }
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_RAISE, AudioManager.FX_FOCUS_NAVIGATION_UP);
         }
         return true;
     }
@@ -304,4 +312,5 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             }
         });
     }
+
 }
