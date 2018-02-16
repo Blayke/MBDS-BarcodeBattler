@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         localBattle = (Button) findViewById(R.id.localBattle);
         networkBattle = (Button) findViewById(R.id.networkBattle);
         this.LaunchVideo();
-        mBackgroundSound = MediaPlayer.create(this,R.raw.galvecillo);
+        mBackgroundSound = MediaPlayer.create(this,R.raw.homemusic);
         mBackgroundSound.start();
         scanner.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
     public void LaunchVideo(){
         VideoView videoview = (VideoView) findViewById(R.id.videoview);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.videobackground);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.arenebackground);
         videoview.setVideoURI(uri);
         videoview.start();
         videoview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

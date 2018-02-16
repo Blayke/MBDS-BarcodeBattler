@@ -47,7 +47,7 @@ public class CombatReseauSelect extends AppCompatActivity {
     Button btnEquipement;
     ImageView btnDeleteEquipement;
     MediaPlayer mBackgroundSound;
-
+    int currentMediaTime;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -67,6 +67,15 @@ public class CombatReseauSelect extends AppCompatActivity {
         unregisterReceiver(mReceiver);
     }
 
+    public void onResume() {
+        super.onResume();
+        if(!mBackgroundSound.isPlaying()){
+            if(currentMediaTime != 0){
+                mBackgroundSound.seekTo(currentMediaTime);
+                mBackgroundSound.start();
+            }
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +87,7 @@ public class CombatReseauSelect extends AppCompatActivity {
         btnRetour = (Button) findViewById(R.id.retour);
         btnChercher = (Button) findViewById(R.id.chercher);
         btnDeleteEquipement = (ImageView) findViewById(R.id.deleteEquipement);
-        mBackgroundSound = MediaPlayer.create(this,R.raw.heroselect);
+        mBackgroundSound = MediaPlayer.create(this, R.raw.heroselect);
         mBackgroundSound.start();
 
         this.hideButton(true);
@@ -190,11 +199,11 @@ public class CombatReseauSelect extends AppCompatActivity {
 
     }
 
-    @Override
     protected void onPause() {
         super.onPause();
-        if(mBackgroundSound.isPlaying()){
+        if (mBackgroundSound.isPlaying()) {
             mBackgroundSound.pause();
+            currentMediaTime = mBackgroundSound.getCurrentPosition();
         }
     }
 
@@ -206,10 +215,10 @@ public class CombatReseauSelect extends AppCompatActivity {
                 if (mascotte != null) {
                     if (equipement != null) {
                         equipementTransfert = equipement;
-                    }else{
+                    } else {
                         equipementTransfert = null;
                     }
-                }else{
+                } else {
                     equipementTransfert = null;
                 }
                 mascotte = data.getExtras().getParcelable("Mascotte");

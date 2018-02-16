@@ -35,6 +35,7 @@ public class CombatLocalSelect extends AppCompatActivity {
     ImageView btnDeleteEquipement1;
     ImageView btnDeleteEquipement2;
     MediaPlayer mBackgroundSound;
+    int currentMediaTime;
 
 
 
@@ -139,6 +140,17 @@ public class CombatLocalSelect extends AppCompatActivity {
         super.onPause();
         if(mBackgroundSound.isPlaying()){
             mBackgroundSound.pause();
+            currentMediaTime = mBackgroundSound.getCurrentPosition();
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        if(!mBackgroundSound.isPlaying()){
+            if(currentMediaTime != 0){
+                mBackgroundSound.seekTo(currentMediaTime);
+                mBackgroundSound.start();
+            }
         }
     }
 
