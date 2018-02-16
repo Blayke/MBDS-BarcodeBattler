@@ -129,7 +129,7 @@ public class EquipementsActivity extends AppCompatActivity implements ListAdapte
 
                     new AlertDialog.Builder(v.getContext())
                             .setTitle("Supprimer " + listeEquipement.get(v.getId()).getNom())
-                            .setMessage("Voulez-vous vraiment supprimer ce monstre ?")
+                            .setMessage("Voulez-vous vraiment supprimer cet equipement ?")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 

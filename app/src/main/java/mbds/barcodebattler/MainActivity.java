@@ -1,27 +1,39 @@
 package mbds.barcodebattler;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import com.google.zxing.Result;
-
-import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     Button scanner, myMonster, equipements, localBattle, networkBattle;
     ZXingScannerView mScannerView;
-
+    RelativeLayout videoView;
+    LinearLayout contentView;
+    boolean isCameraOn = false;
+    MediaPlayer mBackgroundSound;
+    int currentMediaTime;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,64 +43,84 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         equipements = (Button) findViewById(R.id.equipements);
         localBattle = (Button) findViewById(R.id.localBattle);
         networkBattle = (Button) findViewById(R.id.networkBattle);
-
-        scanner.setOnClickListener(new View.OnClickListener() {
+        this.LaunchVideo();
+        mBackgroundSound = MediaPlayer.create(this,R.raw.galvecillo);
+        mBackgroundSound.start();
+        scanner.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                mScannerView = new ZXingScannerView(MainActivity.this);
-                setContentView(mScannerView);
-                mScannerView.setResultHandler(MainActivity.this);
-                mScannerView.startCamera();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    float x = (float) 1.25;
+                    float y = (float) 1.25;
+                    scanner.setScaleX(x);
+                    scanner.setScaleY(y);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    float x = 1;
+                    float y = 1;
+                    scanner.setScaleX(x);
+                    scanner.setScaleY(y);
+                    mScannerView = new ZXingScannerView(MainActivity.this);
+                    setContentView(mScannerView);
+                    mScannerView.setResultHandler(MainActivity.this);
+                    mScannerView.startCamera();
+                    isCameraOn = true;
+                }
+                return false;
             }
         });
 
-        myMonster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MonstersActivity.class);
-                //startActivityForResult(intent, 1);
-                startActivity(intent);
-            }
-        });
 
-        equipements.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EquipementsActivity.class);
-                startActivity(intent);
-            }
-        });
+//        scanner.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mScannerView = new ZXingScannerView(MainActivity.this);
+//                setContentView(mScannerView);
+//                mScannerView.setResultHandler(MainActivity.this);
+//                mScannerView.startCamera();
+//            }
+//        });
 
-        localBattle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CombatLocalSelect.class);
-                startActivity(intent);
 
-                /*int idImage = getResources().getIdentifier("alex", "drawable", getPackageName());
-                Mascotte m1 = new Mascotte("Alex", 20, 65, 40, 30, idImage);
+        Navigation(myMonster, MainActivity.this, MonstersActivity.class);
 
-                idImage = getResources().getIdentifier("ame_des_aspects", "drawable", getPackageName());
-                Mascotte m2 = new Mascotte("Âme des aspects", 40, 100, 30, 20, idImage);
+//        myMonster.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, MonstersActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
-                Intent intent = new Intent(MainActivity.this, CombatMascottesActivity.class);
+        Navigation(equipements, MainActivity.this, EquipementsActivity.class);
 
-                ArrayList<LogCombat> logsCombat = new ArrayList<>();
+//        equipements.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, EquipementsActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
-                ServiceCombat.lancerCombat(m1, m2, logsCombat);
-                intent.putExtra("logsCombat", (Serializable) logsCombat);
+        Navigation(localBattle, MainActivity.this, CombatLocalSelect.class);
 
-                startActivity(intent);*/
-            }
-        });
+//        localBattle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, CombatLocalSelect.class);
+//                startActivity(intent);
+//
+//            }
+//        });
 
-        networkBattle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CombatReseauSelect.class);
-                startActivity(intent);
-            }
-        });
+        Navigation(networkBattle, MainActivity.this, CombatReseauSelect.class);
+
+//        networkBattle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, CombatReseauSelect.class);
+//                startActivity(intent);
+//            }
+//        });
 //        Mascotte testMascotteString = new Mascotte("Laeticia",67,1,500,0);
 //        testMascotteString.testXml(this);
     }
@@ -96,7 +128,22 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     protected void onPause() {
         super.onPause();
-        if (mScannerView != null && mScannerView.isActivated()) mScannerView.stopCamera();
+        if (mScannerView != null && mScannerView.isActivated()){
+            mScannerView.stopCamera();
+        }
+        if(mBackgroundSound.isPlaying()){
+            mBackgroundSound.pause();
+            currentMediaTime = mBackgroundSound.getCurrentPosition();
+        }
+    }
+    public void onResume() {
+        super.onResume();
+        if(!mBackgroundSound.isPlaying()){
+            if(currentMediaTime != 0){
+                mBackgroundSound.seekTo(currentMediaTime);
+                mBackgroundSound.start();
+            }
+        }
     }
 
     @Override
@@ -121,49 +168,64 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
 
         // Exemple : 8 6 9 56 49 9 6
-
-        // Mascotte
-        if (Character.getNumericValue(hashCodeBarre.charAt(0)) <= 5) {
         int idImage;
-        String nom = "Albie";
-            idImage = getResources().getIdentifier("albie", "drawable",this.getPackageName());
-        if (Character.getNumericValue(hashCodeBarre.charAt(1)) <= 5) {
-            nom = "Alex";
-            idImage = getResources().getIdentifier("alex", "drawable",this.getPackageName());
-        }
+        String nom;
+        // Mascotte
+        if (Character.getNumericValue(hashCodeBarre.charAt(3)) <= 5) {
+            if (Character.getNumericValue(hashCodeBarre.charAt(0)) <= 1) {
+                nom = "Birgorneau";
+                idImage = getResources().getIdentifier("birgorneau", "drawable", this.getPackageName());
+            }
+            if (Character.getNumericValue(hashCodeBarre.charAt(0)) == 2 || Character.getNumericValue(hashCodeBarre.charAt(0)) == 6) {
+                nom = "Cricri";
+                idImage = getResources().getIdentifier("cricri", "drawable", this.getPackageName());
+            }
+            if (Character.getNumericValue(hashCodeBarre.charAt(0)) == 3 || Character.getNumericValue(hashCodeBarre.charAt(0)) == 7) {
+                nom = "Groopy";
+                idImage = getResources().getIdentifier("groopy", "drawable", this.getPackageName());
+            }
+            if (Character.getNumericValue(hashCodeBarre.charAt(0)) == 4) {
+                nom = "Jeannot";
+                idImage = getResources().getIdentifier("jeannot", "drawable", this.getPackageName());
+            }
+            if (Character.getNumericValue(hashCodeBarre.charAt(0)) == 5) {
+                nom = "Albie";
+                idImage = getResources().getIdentifier("albie", "drawable", this.getPackageName());
+            } else {
+                nom = "Alex";
+                idImage = getResources().getIdentifier("draco", "drawable", this.getPackageName());
+            }
 
-        String stringNiveau = String.valueOf(hashCodeBarre.charAt(2) + String.valueOf(hashCodeBarre.charAt(3)));
-        int niveau = Integer.parseInt(stringNiveau);
+            String stringNiveau = String.valueOf(hashCodeBarre.charAt(2) + String.valueOf(hashCodeBarre.charAt(3)));
+            int niveau = Integer.parseInt(stringNiveau);
 
-        String stringVie = String.valueOf(hashCodeBarre.charAt(4) + String.valueOf(hashCodeBarre.charAt(5)));
-        int vie = Integer.parseInt(stringVie);
+            String stringVie = String.valueOf(hashCodeBarre.charAt(4) + String.valueOf(hashCodeBarre.charAt(5)));
+            int vie = Integer.parseInt(stringVie);
 
-        int attaque = Character.getNumericValue(hashCodeBarre.charAt(6));
-        int defense = Character.getNumericValue(hashCodeBarre.charAt(7));
+            int attaque = Character.getNumericValue(hashCodeBarre.charAt(6));
+            int defense = Character.getNumericValue(hashCodeBarre.charAt(7));
 
-        Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense, idImage);
+            Mascotte mascotteGagnee = new Mascotte(nom, niveau, vie, attaque, defense, idImage);
 
-        Log.d("codeBarre", mascotteGagnee.toString());
+            Log.d("codeBarre", mascotteGagnee.toString());
 
-        BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
-        barCoderMaster.addMascotte(mascotteGagnee);
+            BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
+            barCoderMaster.addMascotte(mascotteGagnee);
 
-        Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
-        intent.putExtra("mascotte", (Parcelable) mascotteGagnee);
+            Intent intent = new Intent(MainActivity.this, DetailsMascotte.class);
+            intent.putExtra("mascotte", (Parcelable) mascotteGagnee);
 
-        startActivity(intent);
+            startActivity(intent);
 
         }
         // Equipement
         else {
-            String nom = "Epee courte";
-
-            int idImage = getResources().getIdentifier("epeecourte", "drawable",this.getPackageName());
+            nom = "Epee courte";
+            idImage = getResources().getIdentifier("epeecourte", "drawable", this.getPackageName());
             if (Character.getNumericValue(hashCodeBarre.charAt(1)) <= 5) {
-
-                idImage = getResources().getIdentifier("pugilatlegendaire", "drawable",this.getPackageName());
+                nom = "Pugilat légendaire";
+                idImage = getResources().getIdentifier("pugilatlegendaire", "drawable", this.getPackageName());
             }
-
 
             String stringVie = String.valueOf(hashCodeBarre.charAt(2) + String.valueOf(hashCodeBarre.charAt(3)));
             int vie = Integer.parseInt(stringVie);
@@ -177,13 +239,69 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
             BarcodeBattlerBDD barCoderMaster = new BarcodeBattlerBDD(this);
             barCoderMaster.addEquipement(equipementGagnee);
-//TODO
-            //Intent intent = new Intent(MainActivity.this, DetailsEquipement.class);
-            //intent.putExtra("equipement", equipementGagnee);
-            //startActivity(intent);
-        }
 
-        //Resume scanning
-        //mScannerView.resumeCameraPreview(this);
+            Intent intent = new Intent(MainActivity.this, DetailsEquipement.class);
+            intent.putExtra("equipement", equipementGagnee);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            onBackPressed();
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(isCameraOn){
+        startActivity(new Intent(MainActivity.this,MainActivity.class));
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LaunchVideo();
+    }
+
+    public static void Navigation(final Button buttonNav, final Context ctx, final Class activitylaunch) {
+        final Activity ctxA = (Activity) ctx;
+        buttonNav.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    float x = (float) 1.25;
+                    float y = (float) 1.25;
+                    buttonNav.setScaleX(x);
+                    buttonNav.setScaleY(y);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    float x = 1;
+                    float y = 1;
+                    buttonNav.setScaleX(x);
+                    buttonNav.setScaleY(y);
+                    Intent intent = new Intent(ctx, activitylaunch);
+                    ctxA.startActivity(intent);
+                }
+                return false;
+            }
+        });
+    }
+
+    public void LaunchVideo(){
+        VideoView videoview = (VideoView) findViewById(R.id.videoview);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.videobackground);
+        videoview.setVideoURI(uri);
+        videoview.start();
+        videoview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.setLooping(true);
+            }
+        });
     }
 }

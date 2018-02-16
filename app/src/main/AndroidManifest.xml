@@ -9,26 +9,46 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/logobattle"
+        android:label="Barcode Battle"
+        android:roundIcon="@drawable/logobattle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MonstersActivity" />
-        <activity android:name=".CombatMascottesActivity" />
-        <activity android:name=".DetailsMascotte" />
-        <activity android:name=".CombatLocalSelect" />
-        <activity android:name=".ListMascotte" />
-        <activity android:name=".CombatReseauSelect" />
-        <activity android:name=".ListEquipement" />
-        <activity android:name=".EquipementsActivity"></activity>
+        <activity
+            android:name=".MonstersActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".CombatMascottesActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".DetailsMascotte"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".CombatLocalSelect"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ListMascotte"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".CombatReseauSelect"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ListEquipement"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".DetailsEquipement"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".EquipementsActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

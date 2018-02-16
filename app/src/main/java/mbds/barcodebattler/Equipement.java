@@ -108,9 +108,9 @@ public class Equipement implements Cloneable, Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.id);
         parcel.writeString(this.nom);
-        parcel.writeInt(this.vie);
         parcel.writeInt(this.attaque);
         parcel.writeInt(this.defense);
+        parcel.writeInt(this.vie);
         parcel.writeInt(this.idImage);
     }
 }

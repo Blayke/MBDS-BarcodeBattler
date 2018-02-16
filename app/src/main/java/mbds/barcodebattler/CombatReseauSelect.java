@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
@@ -44,8 +45,8 @@ public class CombatReseauSelect extends AppCompatActivity {
     public Handler mHandler;
     Thread thread;
     Button btnEquipement;
-    TextView equipementNomText;
-    Button btnDeleteEquipement;
+    ImageView btnDeleteEquipement;
+    MediaPlayer mBackgroundSound;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -76,8 +77,9 @@ public class CombatReseauSelect extends AppCompatActivity {
         btnEquipement = (Button) findViewById(R.id.equipement);
         btnRetour = (Button) findViewById(R.id.retour);
         btnChercher = (Button) findViewById(R.id.chercher);
-        equipementNomText = (TextView) findViewById(R.id.equipementNom);
-        btnDeleteEquipement = (Button) findViewById(R.id.deleteEquipement);
+        btnDeleteEquipement = (ImageView) findViewById(R.id.deleteEquipement);
+        mBackgroundSound = MediaPlayer.create(this,R.raw.heroselect);
+        mBackgroundSound.start();
 
         this.hideButton(true);
         this.hideButtonEquipement(true);
@@ -117,7 +119,7 @@ public class CombatReseauSelect extends AppCompatActivity {
                 mascotte.setVie(mascotte.getVie() - equipement.getVie());
                 mascotte.setAttaque(mascotte.getAttaque() - equipement.getAttaque());
                 mascotte.setDefense(mascotte.getDefense() - equipement.getDefense());
-                equipementNomText.setText("");
+                btnEquipement.setText("Equipement");
                 btnDeleteEquipement.setVisibility(View.GONE);
                 equipement = null;
             }
@@ -189,15 +191,35 @@ public class CombatReseauSelect extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if(mBackgroundSound.isPlaying()){
+            mBackgroundSound.pause();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == 1) {
+                Equipement equipementTransfert;
+                if (mascotte != null) {
+                    if (equipement != null) {
+                        equipementTransfert = equipement;
+                    }else{
+                        equipementTransfert = null;
+                    }
+                }else{
+                    equipementTransfert = null;
+                }
                 mascotte = data.getExtras().getParcelable("Mascotte");
                 if (mascotte != null) {
                     hideButton(false);
-                    TextView txtMascotte1 = (TextView) findViewById(R.id.nommascotte);
-                    txtMascotte1.setText(mascotte.getNom());
-
+                    if (equipementTransfert != null) {
+                        mascotte.setAttaque(mascotte.getAttaque() + equipementTransfert.getAttaque());
+                        mascotte.setDefense(mascotte.getDefense() + equipementTransfert.getDefense());
+                        mascotte.setVie(mascotte.getVie() + equipementTransfert.getVie());
+                    }
                     Drawable img = getResources().getDrawable(mascotte.getIdImage());
                     Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
 
@@ -226,7 +248,7 @@ public class CombatReseauSelect extends AppCompatActivity {
             if (resultCode == 1) {
                 this.hideButtonEquipement(false);
                 equipement = data.getExtras().getParcelable("Equipement");
-                equipementNomText.setText(equipement.getNom());
+                btnEquipement.setText(equipement.getNom());
                 mascotte.setAttaque(mascotte.getAttaque() + equipement.getAttaque());
                 mascotte.setDefense(mascotte.getDefense() + equipement.getDefense());
                 mascotte.setVie(mascotte.getVie() + equipement.getVie());
@@ -248,10 +270,10 @@ public class CombatReseauSelect extends AppCompatActivity {
 
     private void hideButtonEquipement(boolean bool) {
         if (bool) {
-            equipementNomText.setVisibility(View.GONE);
-            btnDeleteEquipement.setVisibility(View.GONE);
+            btnEquipement.setVisibility(View.INVISIBLE);
+            btnDeleteEquipement.setVisibility(View.INVISIBLE);
         } else {
-            equipementNomText.setVisibility(View.VISIBLE);
+            btnEquipement.setVisibility(View.VISIBLE);
             btnDeleteEquipement.setVisibility(View.VISIBLE);
         }
     }

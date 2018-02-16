@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
     TextView nomMascotte2;
     TextView resume;
     HashMap attributionCouleurs;
+    ImageView btnRetour;
 
     int nbTours = 0;
     ArrayList<LogCombat> logsCombat;
@@ -41,6 +45,7 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         setContentView(R.layout.activity_combat_mascottes);
         logsCombat = new ArrayList<>();
         attributionCouleurs = new HashMap();
+        btnRetour = (ImageView) findViewById(R.id.retour);
 
         Mascotte vainqueur;
 
@@ -72,20 +77,22 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
 
         nbTours = this.logsCombat.size();
 
-        attributionCouleurs.put(mascotte1.getNom(), Color.LTGRAY);
-        attributionCouleurs.put(mascotte2.getNom(), Color.GRAY);
+        attributionCouleurs.put(mascotte1.getNom(), Color.alpha(150));
+        attributionCouleurs.put(mascotte2.getNom(), Color.alpha(151));
 
         imageMascotte1 = (ImageView) findViewById(R.id.imagemascotte1);
         Drawable img = getResources().getDrawable( mascotte1.getIdImage());
         Bitmap imgBitmap = ((BitmapDrawable) img).getBitmap();
         imageMascotte1.setImageBitmap(imgBitmap);
-        imageMascotte1.setBackgroundColor(Color.LTGRAY);
-
+        Drawable background = getResources().getDrawable(R.drawable.halo);
+        background.setAlpha(150);
+//        imageMascotte1.setBackgroundColor(Color.LTGRAY);
         imageMascotte2 = (ImageView) findViewById(R.id.imagemascotte2);
         Drawable img2 = getResources().getDrawable( mascotte2.getIdImage());
         Bitmap imgBitmap2 = ((BitmapDrawable) img2).getBitmap();
         imageMascotte2.setImageBitmap(imgBitmap2);
-        imageMascotte2.setBackgroundColor(Color.GRAY);
+
+//        imageMascotte2.setBackgroundColor(Color.GRAY);
 
         texteResultat = (TextView) findViewById(R.id.vainqueur);
         texteResultat.setText(texteResultat.getText() + vainqueur.getNom() + "");
@@ -102,7 +109,14 @@ public class CombatMascottesActivity extends AppCompatActivity implements ListAd
         logsView = (ListView) findViewById(R.id.logs);
         logsView.setAdapter(this);
 
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
+
 
     @Override
     public boolean areAllItemsEnabled() {

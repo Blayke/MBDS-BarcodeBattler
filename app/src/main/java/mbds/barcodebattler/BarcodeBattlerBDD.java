@@ -180,13 +180,14 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
     }
 
     public void remplirBase() {
+        deleteBDD();
         if (this.getMascottes().size() == 0) {
             int idImage = this.getIdImage("albie");
             Mascotte m1 = new Mascotte("Albie", 25, 40, 13, 10, idImage);
             this.addMascotte(m1);
 
-            idImage = this.getIdImage("alex");
-            m1 = new Mascotte("Alex", 30, 65, 20, 5, idImage);
+            idImage = this.getIdImage("draco");
+            m1 = new Mascotte("Draco", 30, 65, 20, 5, idImage);
 
 
             this.addMascotte(m1);
@@ -203,7 +204,6 @@ public class BarcodeBattlerBDD extends SQLiteOpenHelper {
             Equipement e2 = new Equipement("Pugilat légendaire", 30, 0, 15, idImage);
             this.addEquipement(e1);
             this.addEquipement(e2);
-
         }
     }
 

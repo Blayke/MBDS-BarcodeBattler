@@ -8,7 +8,6 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:background="@drawable/background"
         >
 
         <ImageView
@@ -26,6 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_toEndOf="@+id/IV"
+            android:textStyle="bold"
+            android:textColor="@color/material_grey_100"
             android:layout_marginRight="5dp"
             android:textSize="15sp"
             android:text="(21)" />
@@ -36,6 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:textStyle="bold"
+            android:textColor="@color/material_grey_100"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/niveau"
             android:textSize="15sp"
@@ -63,6 +66,8 @@
                     android:id="@+id/vie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/material_grey_100"
                     android:text="120"
                     android:textSize="20sp" />
 
@@ -76,6 +81,8 @@
                     android:id="@+id/attaque"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/material_grey_100"
                     android:text="120"
                     android:textSize="20sp" />
                 <ImageView
@@ -88,6 +95,8 @@
                     android:id="@+id/defense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/material_grey_100"
                     android:text="120"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -97,9 +106,13 @@
         <Button
             android:id="@+id/delete"
             android:text="Supprimer"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/IV"
+            android:textColor="@color/material_grey_100"
+            android:background="@drawable/buttonshape"
             android:layout_below="@+id/caracteristiques"
             android:textSize="10dp" />
 

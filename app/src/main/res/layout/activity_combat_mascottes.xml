@@ -4,41 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/arena_battle_background"
     android:orientation="vertical"
     tools:context="mbds.barcodebattler.CombatMascottesActivity">
-
-    <TextView
-        android:text="Combat"
-        android:textAlignment="center"
-        android:textSize="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
+
 
         <TextView
-            android:id="@+id/nommascotte1"
-            android:text="Nom mascotte 1"
+            android:id="@+id/vainqueur"
+            android:layout_width="match_parent"
+            android:layout_height="17dp"
+            android:text="Vainqueur : "
             android:textAlignment="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-
-        <TextView
-            android:id="@+id/nommascotte2"
-            android:text="Nom mascotte 2"
-            android:textAlignment="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-
+            android:textAllCaps="true"
+            android:textColor="@color/zxing_status_text"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <!--Text mascotte-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,56 +38,118 @@
         android:orientation="horizontal"
         android:weightSum="5">
 
-        <ImageView
-            android:id="@+id/imagemascotte1"
+        <TextView
+            android:id="@+id/nommascotte1"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            />
+            android:text="Nom mascotte 1"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/zxing_status_text"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
 
         <TextView
-            android:text="VS"
-            android:textAlignment="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="75dp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/imagemascotte2"
+        <TextView
+            android:id="@+id/nommascotte2"
             android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_weight="2" />
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Nom mascotte 2"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/zxing_status_text"
+            android:textSize="15dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/vainqueur"
-            android:text="Le vainqueur est : "
-            android:textAlignment="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/resume"
-            android:text="Résumé du combat "
-            android:textAlignment="center"
-            android:textSize="17dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- Image Mascotte-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"/>
+            android:orientation="horizontal"
+            android:weightSum="5">
 
-        <ListView
-            android:id="@+id/logs"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            <ImageView
+                android:id="@+id/imagemascotte1"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_weight="2"
+                android:background="@drawable/halo"
+               />
 
-        </ListView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="75dp"
+                android:layout_weight="1"
+                android:textAlignment="center" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imagemascotte2"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_weight="2"
+                android:background="@drawable/halo"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <!--Log combat-->
 
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/resume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Résumé du combat "
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/zxing_status_text"
+                android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="4"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/retour"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/previouswhite"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"/>
+            <ListView
+                android:id="@+id/logs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/backgroundlog"
+                android:layout_weight="2" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
